@@ -12,9 +12,8 @@ kernelspec:
   name: python3
 ---
 
-# Why study neural mechanisms, and if we want to, how can we do that?
-
 ## Why study neural mechanisms?
+
 Studying neural mechanisms is a complicated process, so we should know why we would want to do that and what the outcome could be useful for.
 
 ### Curiosity!
@@ -27,8 +26,6 @@ Can help to find treatment of deficits, or improve life quality of healthy peopl
 - Medical diagnostics: communication with lock-in patient to determine consciousness  
 - Neural plasticity: taxi drivers; meditation->DSL PFC act increase -> explains why TMS works   
 - Help to choose medication (?)  
-
-
 
 #### Short-term
 support of psychotherapeutic interventions (neurofeedback)
