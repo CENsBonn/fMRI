@@ -3,7 +3,14 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: why-how
-- file: data-repositories
-- file: code
+parts:
+  - caption: Theory
+    chapters:
+    - file: chapter1_intro
+      sections:
+      - file: chapter1_why
+      - file: chapter1_how
+  - caption: Practice
+    chapters:
+    - file: data-repositories
+    - file: code

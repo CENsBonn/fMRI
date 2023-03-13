@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Where can I get data? &#8212; An introduction to human neuroimaging research</title>
+    <title>Background &#8212; An introduction to human neuroimaging research</title>
   
   
   
@@ -61,11 +61,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'data-repositories';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapter1_intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Practical Notes" href="code.html" />
-    <link rel="prev" title="How can we study neural mechanisms?" href="chapter1_how.html" />
+    <link rel="next" title="Why study neural mechanisms?" href="chapter1_why.html" />
+    <link rel="prev" title="CENs fMRI Jupyter Book" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -157,16 +157,16 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Theory</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="chapter1_intro.html">Background</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Background</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="chapter1_why.html">Why study neural mechanisms?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapter1_how.html">How can we study neural mechanisms?</a></li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Practice</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Where can I get data?</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data-repositories.html">Where can I get data?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Practical Notes</a></li>
 </ul>
 
@@ -239,7 +239,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdata-repositories.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fchapter1_intro.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -269,7 +269,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/data-repositories.md" target="_blank"
+      <li><a href="_sources/chapter1_intro.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -338,9 +338,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -351,21 +349,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Where can I get data?</h1>
+    <h1>Background</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-repositories">Datasets and repositories:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-meta-analyses">Automated meta-analyses</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">A special kind of neuroimaging: people watching movies (naturalistic imaging)</a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -375,37 +363,11 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="where-can-i-get-data">
-<h1>Where can I get data?<a class="headerlink" href="#where-can-i-get-data" title="Permalink to this heading">#</a></h1>
-<p>Thanks to the formation of common data acquisition projects and the
-popularization of data sharing through repositories, more and more high-quality
-datasets can be accessed online.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>data to download are often in BIDS format, which is explained here: <a class="reference external" href="https://bids.neuroimaging.io/">https://bids.neuroimaging.io/</a></p>
+  <section class="tex2jax_ignore mathjax_ignore" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this heading">#</a></h1>
+<p>In this first section, we will discuss why one might want to study neural mechanisms, and if one wishes to do so, how this is possible.</p>
+<div class="toctree-wrapper compound">
 </div>
-<section id="datasets-and-repositories">
-<h2>Datasets and repositories:<a class="headerlink" href="#datasets-and-repositories" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>Human Connectome Project: <a class="reference external" href="https://www.humanconnectome.org/">https://www.humanconnectome.org/</a></p></li>
-<li><p>7T dataset: <a class="reference external" href="http://naturalscenesdataset.org">http://naturalscenesdataset.org</a>, paper: <a class="reference external" href="https://doi.org/10.1038/s41593-021-00962-x">https://doi.org/10.1038/s41593-021-00962-x</a></p></li>
-<li><p><a class="reference external" href="https://openneuro.org/">https://openneuro.org/</a></p></li>
-<li><p><a class="reference external" href="https://neurovault.org/">https://neurovault.org/</a></p></li>
-<li><p>academictorrents: <a class="reference external" href="https://academictorrents.com/browse.php?search=fmri">https://academictorrents.com/browse.php?search=fmri</a></p></li>
-</ol>
-</section>
-<section id="automated-meta-analyses">
-<h2>Automated meta-analyses<a class="headerlink" href="#automated-meta-analyses" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://neurosynth.org/">https://neurosynth.org/</a></p></li>
-</ol>
-</section>
-<section id="a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">
-<h2>A special kind of neuroimaging: people watching movies (naturalistic imaging)<a class="headerlink" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://naturalistic-data.org">https://naturalistic-data.org</a></p></li>
-</ol>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -437,20 +399,20 @@ datasets can be accessed online.</p>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="chapter1_how.html"
+       href="intro.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How can we study neural mechanisms?</p>
+        <p class="prev-next-title">CENs fMRI Jupyter Book</p>
       </div>
     </a>
     <a class="right-next"
-       href="code.html"
+       href="chapter1_why.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Practical Notes</p>
+        <p class="prev-next-title">Why study neural mechanisms?</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -460,22 +422,6 @@ datasets can be accessed online.</p>
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-repositories">Datasets and repositories:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-meta-analyses">Automated meta-analyses</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">A special kind of neuroimaging: people watching movies (naturalistic imaging)</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>
