@@ -19,15 +19,15 @@ Studying neural mechanisms is a complicated process, so we should know why we wo
 The first intrinsic motivation is because we might simply be curious as to how our brain manages to create our mind and control our behaviour.
 
 ## Therapy / improvement
-Can help to find treatment of deficits, or improve life quality of healthy people.
+Can help to find treatment of deficits, or improve life quality of healthy people. However, concrete evidence of that is still scarce at present.  
 
 ### Examples:  
-- Medical diagnostics: communication with lock-in patient to determine consciousness  
-- Neural plasticity: taxi drivers; meditation->DSL PFC act increase -> explains why TMS works   
-- Help to choose medication (?)  
+- Medical diagnostics: [fMRI can be used to communicate with a patient in a vegetative state to determine their consciousness level](https://www.nejm.org/doi/full/10.1056/nejmoa0905370); [works with fNIRS as well](https://doi.org/10.1117/1.NPh.4.4.040501)
+- MRI can reveal evidence of neural plasticity in adults, such as: [increase in hippocampus volume due to navigation training in taxi drivers](https://doi.org/10.1073/pnas.070039597](https://doi.org/10.1073/pnas.070039597); [increase in hippocampus and dorsolateral prefrontal cortex volume, and changes in navigation strategy, after playing a video game for 2 months]([https://doi.org/10.1038/mp.2013.120](https://doi.org/10.1038/mp.2013.120). [However, a recent randomized control study showed no significant change in gray matter as a result of an 8-week mindfulness training](https://www.science.org/doi/full/10.1126/sciadv.abk3316)
+- While [neuroimaging cannot help to diagnose classically-defined psychiatric diseases](https://doi.org/10.1176/appi.ajp.2018.1750701), it can help the differential diagnosis by [excluding potential causes of psychiatric symptoms](https://doi.org/10.3389/fpsyt.2020.00276)
 
 ### Short-term
-support of psychotherapeutic interventions (neurofeedback)
+Neuroimaging can support psychotherapeutic interventions through neurofeedback; for example, [people can learn to modulate the response in their amygdala through neurofeedback](https://doi.org/10.1016/j.neubiorev.2022.104694). Whether neurofeedback really improves the impact of psychotherapeutic interventions appears however to still be unknown.
 
 ### Long-term
 1. development of new drugs
