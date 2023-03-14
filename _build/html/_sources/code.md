@@ -13,7 +13,26 @@ kernelspec:
 ---
 # Practical Notes
 
-Here, we will detail the steps to take in order to get data and analyse it using free software
+Here, we will detail the steps to take in order to get data and analyse it using free software.
+
+## An attempt to run visualization
+
+```
+{
+    import altair as alt
+    from vega_datasets import data
+
+    source = data.iris()
+
+    alt.Chart(source).mark_circle().encode(
+        alt.X('sepalLength', scale=alt.Scale(zero=False)),
+        alt.Y('sepalWidth', scale=alt.Scale(zero=False, padding=1)),
+        color='species',
+        size='petalWidth'
+    )
+}
+```
+
 
 Jupyter Book also lets you write text-based notebooks using MyST Markdown.
 See [the Notebooks with MyST Markdown documentation](https://jupyterbook.org/file-types/myst-notebooks.html) for more detailed instructions.
