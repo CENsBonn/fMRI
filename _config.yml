@@ -2,8 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: An introduction to human neuroimaging research
-author: Johannes Schultz & University of Bonn MSC Neuroscience WPM28 class of 2023
-logo: logo.png
+author: Johannes Schultz, members of CENs @ University of Bonn, and MSC Neuroscience WPM28 class of 2023
+logo: logo2.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
