@@ -12,13 +12,10 @@ kernelspec:
   name: python3
 ---
 # How can we study neural mechanisms?
-Many methods have been used to investigate brain functions. Starting from studies 
-of the effects of human brain lesions resulting from accidents, war injuries or 
-stroke, techniques have multiplied and increased in sophistication.
+Many methods have been used to investigate brain functions. Starting from studies of the effects of human brain lesions resulting from accidents, war injuries or stroke, techniques have multiplied and increased in sophistication.
 
 ## Measurement of brain activity
-These techniques record some measure of brain activity or a derivate measure, 
-but do not allow to modify this activity.
+These techniques record some measure of brain activity or a derivate measure, but do not allow to modify this activity.
 
 ### Electric signals
 Neurons communicate by sending electric signals, so recording electric activity
