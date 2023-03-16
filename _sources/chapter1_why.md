@@ -19,7 +19,9 @@ Studying neural mechanisms is a complicated process, so we should know why we wo
 The first intrinsic motivation is that we might simply be curious as to how our brain creates our mind and controls our behaviour. One random example: one can [reconstruct the images that people saw from their BOLD signal](https://www.biorxiv.org/content/10.1101/2022.11.18.517004v2.full.pdf).
 
 ## Therapy / improvement
-Knowing about the neural mechanisms underlying a process can help to find treatment of deficits in this process, or improve performance of this process in healthy people. For example: *Role of serotonine in depression? Disturbed mechanisms of reward processing in depression?*
+Knowing about the neural mechanisms underlying a process can help to find treatment of deficits in this process, or improve performance of this process in healthy people. For example: *Role of serotonine in depression? Disturbed mechanisms of reward processing in depression?*  
+
+Neuroimaging could also help in the development of new drugs, by providing evidence about the pharmacokinetics and pharmacodynamics of a specific drug or substance, such as [oxytocin](https://doi.org/10.1016/j.biopsych.2017.04.015).
 
 ## Assistance in diagnostics
 Another use of measurements of neural mechanisms could be assistance in diagnostic procedures. For example,  [fMRI can be used to communicate with a patient in a vegetative state to determine their consciousness level](https://www.nejm.org/doi/full/10.1056/nejmoa0905370); [this is possible with fNIRS as well](https://doi.org/10.1117/1.NPh.4.4.040501).
@@ -30,6 +32,3 @@ One finding that appeared in the last decades is that even the adult brain is pl
 
 ## Assistance in therapy
 Neuroimaging can support psychotherapeutic interventions through neurofeedback; for example, [people can learn to modulate the response in their amygdala through neurofeedback](https://doi.org/10.1016/j.neubiorev.2022.104694). Whether neurofeedback really improves the impact of psychotherapeutic interventions appears however to still be unknown.
-
-## Provide evidence for the development of drugs
-*Development of new drugs → measure of pharmacokinetics and pharmacodynamics → changed fMRI after drug intervention?*
