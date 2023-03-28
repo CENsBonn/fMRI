@@ -362,13 +362,18 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-repositories">Datasets and repositories</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri-bold-datasets">fMRI BOLD datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-method-datasets">Multi-method datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri-bold-datasets">fMRI BOLD datasets</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-to-object-images">Responses to object images</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-to-videos">Responses to videos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-during-different-tasks">Responses during different tasks</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-explored">Non-explored:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-fmri-datasets">Non-fMRI datasets</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-meta-analyses">Automated meta-analyses</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">A special kind of neuroimaging: people watching movies (naturalistic imaging)</a></li>
 </ul>
             </nav>
         </div>
@@ -390,29 +395,50 @@ popularization of data sharing through repositories, more and more high-quality 
 </div>
 <section id="datasets-and-repositories">
 <h2>Datasets and repositories<a class="headerlink" href="#datasets-and-repositories" title="Permalink to this heading">#</a></h2>
+<section id="multi-method-datasets">
+<h3>Multi-method datasets<a class="headerlink" href="#multi-method-datasets" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://www.humanconnectome.org/">Human Connectome Project</a>.</p></li>
+<li><p>A large-scale biomedical database and research resource, containing in-depth genetic and health information from half a million UK participants: <a class="reference external" href="https://www.ukbiobank.ac.uk">UK Biobank</a>.</p></li>
+<li><p>fMRI data from 3 people looking at 8740 images of 720 objects, MEG data from 4 participants looking at 22448 images of 1854 objects, 4.7 mio similarity ratings from 12340 participants. The <a class="reference external" href="https://things-initiative.org">THINGS-data</a> database. See the <a class="reference external" href="https://doi.org/10.7554/eLife.82580">paper</a>.</p></li>
+<li><p>Data from 12 2-hour sessions from 10 participants, with 4 T1, T2 and angiogram images, 8 MR venograms, 5 hours of resting-state, &gt;5.5 hours of task fMRI data from 3 tasks, + neuropsychological tests: <a class="reference external" href="https://openneuro.org/datasets/ds000224">Midnight Scan Club</a>.</p></li>
+</ul>
+</section>
 <section id="fmri-bold-datasets">
 <h3>fMRI BOLD datasets<a class="headerlink" href="#fmri-bold-datasets" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>The <a class="reference external" href="https://things-initiative.org">THINGS-data</a> database. fMRI data from 3 people looking at 8740 images of 720 objects, MEG data from 4 participants looking at 22448 images of 1854 objects, 4.7 mio similarity ratings from 12340 participants. See the <a class="reference external" href="https://doi.org/10.7554/eLife.82580">paper</a>.</p></li>
-<li><p>The <a class="reference external" href="https://www.humanconnectome.org/">Human Connectome Project</a></p></li>
-<li><p>Data from 8 participants presented with 1000s of images of natural scenes over 30-40 sessions, scanned at 1.8^3mm resolution at 7T: the <a class="reference external" href="http://naturalscenesdataset.org">Natural Scenes Dataset</a>. See also the <a class="reference external" href="https://doi.org/10.1038/s41593-021-00962-x">paper</a>.</p></li>
-<li><p>BOLD responses to&gt;1000 3s-videos with metadata: <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf">Bold moments</a></p></li>
-<li><p>Data from 4 participants observing 5,254 images over 15 sessions, slow event-related paradigm, 3T: <a class="reference external" href="https://bold5000-dataset.github.io/website/">BOLDSOOO</a></p></li>
-<li><p>Data from a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: <a class="reference external" href="https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0">DoctorWho</a></p></li>
-<li><p>Data from 12 participants performing about 12 different tasks: the <a class="reference external" href="https://www.nature.com/articles/sdata2018105">Individual Brain Charting</a> project</p></li>
-<li><p>Data from 12 2-hour sessions from 10 participants, with 4 T1, T2 and angiogram images, 8 MR venograms, 5 hours of resting-state, &gt;5.5 hours of task fMRI data from 3 tasks, + neuropsychological tests: <a class="reference external" href="https://openneuro.org/datasets/ds000224">Midnight Scan Club</a></p></li>
-<li><p>One participant scanned repeatedly during a whole year: <a class="reference external" href="http://www.myconnectome.org">MyConnectome</a></p></li>
-<li><p>Huge database of participants watching Forrest Gump, and more data: <a class="reference external" href="http://www.studyforrest.org">StudyForrest</a></p></li>
-<li><p>A large-scale biomedical database and research resource, containing in-depth genetic and health information from half a million UK participants: <a class="reference external" href="https://www.ukbiobank.ac.uk">UK Biobank</a></p></li>
-<li><p>Large assembly of datasets for computational neuroscience, such as <a class="reference external" href="https://crcns.org/data-sets/vc/vim-1">vim-1</a> by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley</p></li>
-<li><p>General repositories: <a class="reference external" href="https://openneuro.org/">Openneuro</a>, <a class="reference external" href="https://neurovault.org/">NeuroVault</a></p></li>
-<li><p>More fMRI data on <a class="reference external" href="https://academictorrents.com/browse.php?search=fmri">academictorrents</a></p></li>
+<li><p>General repositories: <a class="reference external" href="https://openneuro.org/">Openneuro</a>, <a class="reference external" href="https://neurovault.org/">NeuroVault</a>, <a class="reference external" href="https://academictorrents.com/browse.php?search=fmri">academictorrents</a>.</p></li>
 </ul>
+<section id="responses-to-object-images">
+<h4>Responses to object images<a class="headerlink" href="#responses-to-object-images" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p>7T data from 8 participants presented with 1000s of images of natural scenes over 30-40 sessions, scanned at 1.8^3mm resolution: the <a class="reference external" href="http://naturalscenesdataset.org">Natural Scenes Dataset</a>. See also the <a class="reference external" href="https://doi.org/10.1038/s41593-021-00962-x">paper</a>.</p></li>
+<li><p>Data from 4 participants observing 5,254 images over 15 sessions, slow event-related paradigm, 3T: <a class="reference external" href="https://bold5000-dataset.github.io/website/">bold5OOO</a>.</p></li>
+<li><p>Large assembly of datasets for computational neuroscience, such as <a class="reference external" href="https://crcns.org/data-sets/vc/vim-1">vim-1</a> by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley.</p></li>
+</ul>
+</section>
+<section id="responses-to-videos">
+<h4>Responses to videos<a class="headerlink" href="#responses-to-videos" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p>BOLD responses to&gt;1000 3s-videos with metadata: <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf">Bold moments</a></p></li>
+<li><p>Data from a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: <a class="reference external" href="https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0">DoctorWho</a>.</p></li>
+<li><p>Huge database of participants watching Forrest Gump, and more data: <a class="reference external" href="http://www.studyforrest.org">StudyForrest</a></p></li>
+<li><p><a class="reference external" href="https://naturalistic-data.org">Naturalistic data</a>.</p></li>
+</ul>
+</section>
+<section id="responses-during-different-tasks">
+<h4>Responses during different tasks<a class="headerlink" href="#responses-during-different-tasks" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Data from 12 participants performing about 12 different tasks: the <a class="reference external" href="https://www.nature.com/articles/sdata2018105">Individual Brain Charting</a> project.</p></li>
+<li><p>One participant scanned repeatedly during a whole year: <a class="reference external" href="http://www.myconnectome.org">MyConnectome</a>.</p></li>
+<li><p>94 participants performing a 5-minute “cognitive localizer” experiment with 8 tasks (including visual perception, finger tapping, language, and math): <a class="reference external" href="https://osf.io/vhtf6/files/osfstorage">The Brainomics/Localizer database</a>; <a class="reference external" href="https://gin.g-node.org/ljchang/Localizer">the same data preprocessed using fMRIprep</a>; <a class="reference external" href="https://doi.org/10.1186/1471-2202-8-91">the paper describing the experiment</a>; <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2015.09.052">the paper describing the dataset</a>.</p></li>
+</ul>
+</section>
 </section>
 <section id="non-explored">
 <h3>Non-explored:<a class="headerlink" href="#non-explored" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><a class="reference external" href="https://paperswithcode.com/dataset/brain-score">Brain-Score</a></p></li>
+<li><p><a class="reference external" href="https://paperswithcode.com/dataset/brain-score">Brain-Score</a>.</p></li>
 </ul>
 </section>
 <section id="non-fmri-datasets">
@@ -425,13 +451,7 @@ popularization of data sharing through repositories, more and more high-quality 
 <section id="automated-meta-analyses">
 <h2>Automated meta-analyses<a class="headerlink" href="#automated-meta-analyses" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>The most famous is <a class="reference external" href="https://neurosynth.org/">NeuroSynth</a></p></li>
-</ul>
-</section>
-<section id="a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">
-<h2>A special kind of neuroimaging: people watching movies (naturalistic imaging)<a class="headerlink" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://naturalistic-data.org">Naturalistic data</a></p></li>
+<li><p>The most popular is <a class="reference external" href="https://neurosynth.org/">NeuroSynth</a>.</p></li>
 </ul>
 </section>
 </section>
@@ -498,13 +518,18 @@ popularization of data sharing through repositories, more and more high-quality 
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-repositories">Datasets and repositories</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri-bold-datasets">fMRI BOLD datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-method-datasets">Multi-method datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri-bold-datasets">fMRI BOLD datasets</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-to-object-images">Responses to object images</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-to-videos">Responses to videos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses-during-different-tasks">Responses during different tasks</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-explored">Non-explored:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-fmri-datasets">Non-fMRI datasets</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-meta-analyses">Automated meta-analyses</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-special-kind-of-neuroimaging-people-watching-movies-naturalistic-imaging">A special kind of neuroimaging: people watching movies (naturalistic imaging)</a></li>
 </ul>
   </nav></div>
 
