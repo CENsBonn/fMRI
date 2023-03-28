@@ -39,20 +39,14 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 - Large assembly of datasets for computational neuroscience, such as [vim-1](https://crcns.org/data-sets/vc/vim-1) by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley.
 
 #### Responses to videos
-- BOLD responses to>1000 3s-videos with metadata: [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
 - Data from a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
 - Huge database of participants watching Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org)
+- BOLD responses to>1000 3s-videos with metadata (only a preprint so far, database not yet accessible): [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
 - [Naturalistic data](https://naturalistic-data.org).
 
 #### Responses during different tasks
 - Data from 12 participants performing about 12 different tasks: the [Individual Brain Charting](https://www.nature.com/articles/sdata2018105) project.
 - 94 participants performing a 5-minute "cognitive localizer" experiment with 8 tasks (including visual perception, finger tapping, language, and math): [The Brainomics/Localizer database](https://osf.io/vhtf6/files/osfstorage); [the same data preprocessed using fMRIprep](https://gin.g-node.org/ljchang/Localizer); [the paper describing the experiment](https://doi.org/10.1186/1471-2202-8-91); [the paper describing the dataset](https://doi.org/10.1016/j.neuroimage.2015.09.052).
-
-### Non-explored: 
-- [Brain-Score](https://paperswithcode.com/dataset/brain-score).
-
-### Non-fMRI datasets
-- Allen Brain Observatory
 
 ## Automated meta-analyses
 - The most popular is [NeuroSynth](https://neurosynth.org/).
