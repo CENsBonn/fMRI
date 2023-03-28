@@ -22,12 +22,18 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 ```
 
 ## Datasets and repositories
+
+### Websites linking to datasets and analyses
+- A website with detailed tutorials about how to analyse movie data: [Naturalistic data](https://naturalistic-data.org).
+- A platform for fast and flexible re-analysis of (naturalistic) fMRI studies, with 13 datasets and downloadable code: [Neuroscout](https://neuroscout.org/datasets).
+
 ### Multi-method datasets
 - The [Human Connectome Project](https://www.humanconnectome.org/).
 - A large-scale biomedical database and research resource, containing in-depth genetic and health information from half a million UK participants: [UK Biobank](https://www.ukbiobank.ac.uk).
 - fMRI data from 3 people looking at 8740 images of 720 objects, MEG data from 4 participants looking at 22448 images of 1854 objects, 4.7 mio similarity ratings from 12340 participants. The [THINGS-data](https://things-initiative.org) database. See the [paper](https://doi.org/10.7554/eLife.82580).
 - Data from 12 2-hour sessions from 10 participants, with 4 T1, T2 and angiogram images, 8 MR venograms, 5 hours of resting-state, >5.5 hours of task fMRI data from 3 tasks, + neuropsychological tests: [Midnight Scan Club](https://openneuro.org/datasets/ds000224).
 - One participant scanned repeatedly during a whole year: [MyConnectome](http://www.myconnectome.org).
+- Ongoing initiative to create a biobank with [data from 10,000 New York City area children and adolescents (ages 5-21)](http://fcon_1000.projects.nitrc.org/indi/cmi_healthy_brain_network/About.html).
 
 ### fMRI BOLD datasets
 - General repositories: [Openneuro](https://openneuro.org/), [NeuroVault](https://neurovault.org/), [academictorrents](https://academictorrents.com/browse.php?search=fmri).
@@ -39,10 +45,15 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 - Large assembly of datasets for computational neuroscience, such as [vim-1](https://crcns.org/data-sets/vc/vim-1) by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley.
 
 #### Responses to videos
-- Data from a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
-- Huge database of participants watching Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org)
-- BOLD responses to>1000 3s-videos with metadata (only a preprint so far, database not yet accessible): [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
-- [Naturalistic data](https://naturalistic-data.org).
+- a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
+- participants watching the movie Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org)
+- responses to>1000 3s-videos with metadata (only a preprint so far, database not yet accessible): [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
+- participants watching the movies Sherlock and Merlin (18 participants each): [Sherlock_Merlin] (https://openneuro.org/datasets/ds001110/versions/00003).
+- BOLD data from XXX participants watching a few minutes of the movies Despical Me and The Present http://fcon_1000.projects.nitrc.org/indi/cmi_healthy_brain_network/index.html
+- 12 participants watching 40 naturalistic clips of behaving animals, by [Nastase et al.](https://openneuro.org/datasets/ds000233/versions/1.0.1), see [paper 1](https://doi.org/10.1093/cercor/bhx138) and [2](https://doi.org/10.3389/fnins.2018.00316).
+
+#### Responses to spoken stories
+- 345 subjects, 891 functional scans, and 27 diverse stories of varying duration totaling ~4.6 hours of unique stimuli (~43,000 words): the [Narratives fMRI dataset](https://www.nature.com/articles/s41597-021-01033-3), see this [paper](https://doi.org/10.1038/s41597-021-01033-3).
 
 #### Responses during different tasks
 - Data from 12 participants performing about 12 different tasks: the [Individual Brain Charting](https://www.nature.com/articles/sdata2018105) project.
