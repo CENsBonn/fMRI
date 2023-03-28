@@ -39,20 +39,19 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 
 ### fMRI BOLD datasets
 
-#### Responses to object images
+#### Responses to images
 
 - 7T data from 8 participants presented with 1000s of images of natural scenes over 30-40 sessions, scanned at 1.8^3mm resolution: the [Natural Scenes Dataset](http://naturalscenesdataset.org). See also the [paper](https://doi.org/10.1038/s41593-021-00962-x).
-- Data from 4 participants observing 5,254 images over 15 sessions, slow event-related paradigm, 3T: [bold5OOO](https://bold5000-dataset.github.io/website/).
+- 4 participants observing 5,254 images over 15 sessions, slow event-related paradigm, 3T: [bold5OOO](https://bold5000-dataset.github.io/website/).
 - Large assembly of datasets for computational neuroscience, such as [vim-1](https://crcns.org/data-sets/vc/vim-1) by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley.
 
 #### Responses to videos
 
 - Data from 25 subjects who watched part of the movie [The Grand Budapest Hotel](https://doi.org/10.18112/openneuro.ds003017.v1.0.2); also on [DataLad](http://datasets.datalad.org/?dir=/labs/gobbini). Also avaibale are [Presentation, preprocessing, and analyses scripts](https://github.com/mvdoc/budapest-fmri-data). For details, see the [paper](https://www.nature.com/articles/s41597-020-00735-4).
-- a single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
-- participants watching the movie Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org)
-- responses to>1000 3s-videos with metadata (only a preprint so far, database not yet accessible): [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
-- participants watching the movies Sherlock and Merlin (18 participants each): [Sherlock_Merlin] (https://openneuro.org/datasets/ds001110/versions/00003).
-- BOLD data from XXX participants watching a few minutes of the movies Despical Me and The Present http://fcon_1000.projects.nitrc.org/indi/cmi_healthy_brain_network/index.html
+- A single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
+- Participants watching the movie Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org).
+- Responses to>1000 3s-videos with metadata (only a preprint so far, database not yet accessible): [Bold moments](https://www.biorxiv.org/content/10.1101/2023.03.12.530887v1.full.pdf).
+- Participants watching the movies Sherlock and Merlin (18 participants each): [Sherlock_Merlin](https://openneuro.org/datasets/ds001110/versions/00003).
 - 12 participants watching 40 naturalistic clips of behaving animals, by [Nastase et al.](https://openneuro.org/datasets/ds000233/versions/1.0.1), see [paper 1](https://doi.org/10.1093/cercor/bhx138) and [2](https://doi.org/10.3389/fnins.2018.00316).
 
 #### Responses to spoken stories
