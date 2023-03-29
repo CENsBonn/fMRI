@@ -23,11 +23,6 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 
 ## Datasets and repositories
 
-### Websites linking to datasets and analyses
-
-- A website with detailed tutorials about how to analyse movie data: [Naturalistic data](https://naturalistic-data.org).
-- A platform for fast and flexible re-analysis of (naturalistic) fMRI studies, with 13 datasets and downloadable code: [Neuroscout](https://neuroscout.org/datasets); see also this [paper](https://doi.org/10.7554/eLife.79277).
-
 ### Multi-method datasets
 
 - The [Human Connectome Project](https://www.humanconnectome.org/) contains a dataset of [1200 subjects aged 22-35](https://www.humanconnectome.org/study/hcp-young-adult).
@@ -64,8 +59,6 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 - 94 participants performing a 5-minute "cognitive localizer" experiment with 8 tasks (including visual perception, finger tapping, language, and math): [The Brainomics/Localizer database](https://osf.io/vhtf6/files/osfstorage); [the same data preprocessed using fMRIprep](https://gin.g-node.org/ljchang/Localizer); [the paper describing the experiment](https://doi.org/10.1186/1471-2202-8-91); [the paper describing the dataset](https://doi.org/10.1016/j.neuroimage.2015.09.052).
 
 ## More general links
-### Automated meta-analyses
-- The most popular is [NeuroSynth](https://neurosynth.org/).
 
 ### General repositories
 [Openneuro](https://openneuro.org/), [NeuroVault](https://neurovault.org/), [academictorrents](https://academictorrents.com/browse.php?search=fmri).
