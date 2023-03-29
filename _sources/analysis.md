@@ -14,12 +14,7 @@ kernelspec:
 
 # How can I analyse data?
 
-Thanks to the formation of common data acquisition projects and the 
-popularization of data sharing through repositories, more and more high-quality datasets can be accessed online.
-
-```{Note}
-Data to download are often in BIDS format, which is explained [here](https://bids.neuroimaging.io/).
-```
+Many tutorials exist online. Most of the analysis software is free.
 
 ## Analysis tutorials for classic, regression-based analyses
 
