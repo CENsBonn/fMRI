@@ -18,7 +18,7 @@ Many tutorials exist online. Most of the analysis software is free.
 
 ## Analysis tutorials for classic, regression-based analyses
 
-- Detailed instructions about how to run such analyses with SPM, FReeSurfer, FSL: [Andy's Brain Book](https://andysbrainbook.readthedocs.io/en/latest/).
+- Detailed instructions about how to run such analyses with SPM, FSL, FreeSurfer, afni: [Andy's Brain Book](https://andysbrainbook.readthedocs.io/en/latest/).
 - Complete fMRI course, includes theory and detailed instructions about analyses in Python: [DartBrains](https://DartBrains.org).
 
 ## Analysis tutorials for naturalistic (movie) fMRI datasets

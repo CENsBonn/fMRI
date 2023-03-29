@@ -25,7 +25,7 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 
 ### Multi-method datasets
 
-- The [Human Connectome Project](https://www.humanconnectome.org/) contains a dataset of [1200 subjects aged 22-35](https://www.humanconnectome.org/study/hcp-young-adult). Instructions on how to download data are for example [here](https://andysbrainbook.readthedocs.io/en/latest/HCP/HCP_1_DownloadData.html).
+- The [Human Connectome Project](https://www.humanconnectome.org/) contains a dataset of 1200 subjects aged 22-35, the [WU-Minn HCP Data](https://www.db.humanconnectome.org/data/projects/HCP_1200). Instructions on how to download data are for example [here](https://andysbrainbook.readthedocs.io/en/latest/HCP/HCP_1_DownloadData.html).
 - A large-scale biomedical database and research resource, containing in-depth genetic and health information from half a million UK participants: [UK Biobank](https://www.ukbiobank.ac.uk).
 - fMRI data from 3 people looking at 8740 images of 720 objects, MEG data from 4 participants looking at 22448 images of 1854 objects, 4.7 mio similarity ratings from 12340 participants. The [THINGS-data](https://things-initiative.org) database. See the [paper](https://doi.org/10.7554/eLife.82580).
 - Data from 12 2-hour sessions from 10 participants, with 4 T1, T2 and angiogram images, 8 MR venograms, 5 hours of resting-state, >5.5 hours of task fMRI data from 3 tasks, + neuropsychological tests: [Midnight Scan Club](https://openneuro.org/datasets/ds000224).
@@ -41,7 +41,7 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 - Large assembly of datasets for computational neuroscience, such as [vim-1](https://crcns.org/data-sets/vc/vim-1) by the Collaborative Research in Computational Neuroscience project of the Redwood Center for Theoretical Neuroscience, UC Berkeley.
 
 #### Responses to videos
-- Subset of Human Connectome Project dataset: 184 participants (almost all twins/siblings) scanned at 7T (1.6mm3, TR 1s) for 4 runs of 15 minutes, each containing 3-4 video clips: [see the protocols](https://www.humanconnectome.org/hcp-protocols-ya-7t-imaging).
+- Subset of WU-Minn HCP Data: 184 participants (almost all twins/siblings) scanned at 7T (1.6mm3, TR 1s) for 4 runs of 15 minutes, each containing 3-4 video clips: [WU-Minn HCP Data](https://db.humanconnectome.org/data/projects/HCP_1200) (first steps: create account for human connectome, then Amazon Web Services account as data are available on AWS3), [protocols](https://www.humanconnectome.org/hcp-protocols-ya-7t-imaging).
 - Data from 25 subjects who watched part of the movie [The Grand Budapest Hotel](https://doi.org/10.18112/openneuro.ds003017.v1.0.2); also on [DataLad](http://datasets.datalad.org/?dir=/labs/gobbini). Also avaibale are [Presentation, preprocessing, and analyses scripts](https://github.com/mvdoc/budapest-fmri-data). For details, see the [paper](https://www.nature.com/articles/s41597-020-00735-4).
 - A single individual exposed to 30 episodes of BBC’s Doctor Who (TR=700 ms, 118,000 whole-brain volumes, approx. 23 h; the training set) + 500 volumes (5 min) of repeated short clips (test set, 22 repetitions), recorded with fixation over a period of six months: [DoctorWho](https://data.donders.ru.nl/collections/di/dcc/DSC_2018.00082_134?0).
 - Participants watching the movie Forrest Gump, and more data: [StudyForrest](http://www.studyforrest.org).
