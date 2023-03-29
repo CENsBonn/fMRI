@@ -25,7 +25,7 @@ Data to download are often in BIDS format, which is explained [here](https://bid
 
 ### Multi-method datasets
 
-- The [Human Connectome Project](https://www.humanconnectome.org/) contains a dataset of [1200 subjects aged 22-35](https://www.humanconnectome.org/study/hcp-young-adult).
+- The [Human Connectome Project](https://www.humanconnectome.org/) contains a dataset of [1200 subjects aged 22-35](https://www.humanconnectome.org/study/hcp-young-adult). Instructions on how to download data are for example [here](https://andysbrainbook.readthedocs.io/en/latest/HCP/HCP_1_DownloadData.html).
 - A large-scale biomedical database and research resource, containing in-depth genetic and health information from half a million UK participants: [UK Biobank](https://www.ukbiobank.ac.uk).
 - fMRI data from 3 people looking at 8740 images of 720 objects, MEG data from 4 participants looking at 22448 images of 1854 objects, 4.7 mio similarity ratings from 12340 participants. The [THINGS-data](https://things-initiative.org) database. See the [paper](https://doi.org/10.7554/eLife.82580).
 - Data from 12 2-hour sessions from 10 participants, with 4 T1, T2 and angiogram images, 8 MR venograms, 5 hours of resting-state, >5.5 hours of task fMRI data from 3 tasks, + neuropsychological tests: [Midnight Scan Club](https://openneuro.org/datasets/ds000224).
