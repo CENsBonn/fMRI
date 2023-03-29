@@ -26,6 +26,8 @@ Many tutorials exist online. Most of the analysis software is free.
 - A website with detailed tutorials about how to analyse movie data: [Naturalistic data](https://naturalistic-data.org).
 - A platform for fast and flexible re-analysis of (naturalistic) fMRI studies, with 13 datasets and downloadable code: [Neuroscout](https://neuroscout.org/datasets); see also this [paper](https://doi.org/10.7554/eLife.79277).
 
-## More general links
-### Automated meta-analyses
+## Automated meta-analyses
+
+These are great to get an idea about which brain regions are associated with a process of interest. Extremely fast to run (seconds).
+
 - The most popular is [NeuroSynth](https://neurosynth.org/).
