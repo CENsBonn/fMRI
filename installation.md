@@ -63,3 +63,7 @@ The command above should have created a directory structure as follows:
 
 15 directories
 ```
+
+```console
+$ pip install jupyter-book
+$ jupyter-book build mybook/
