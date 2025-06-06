@@ -13,4 +13,5 @@ parts:
   - caption: Practice
     chapters:
     - file: data-repositories
+    - file: installation
     - file: code
