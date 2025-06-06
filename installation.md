@@ -14,37 +14,37 @@ kernelspec:
 
 ## Install `conda` (Linux)
 
-```shell
-❯ conda install -c conda-forge datalad
-❯ conda create -n cens
-❯ conda activate cens
-❯ conda env list
+```console
+$ conda install -c conda-forge datalad
+$ conda create -n cens
+$ conda activate cens
+$ conda env list
 
 # conda environments:
 #
 base                   /home/sebelino/miniforge3
 cens                 * /home/sebelino/miniforge3/envs/cens
 
-❯ pip install heudiconv
-❯ conda install -c conda-forge dcm2niix
+$ pip install heudiconv
+$ conda install -c conda-forge dcm2niix
 ```
 
 
 Download an example dataset:
 
-```shell
-❯ wget https://datasets.datalad.org/repronim/heudiconv-reproin-example/reproin_dicom.zip
+```console
+$ wget https://datasets.datalad.org/repronim/heudiconv-reproin-example/reproin_dicom.zip
 ```
 
 Convert with `heudiconv`:
 
-```shell
-heudiconv --files reproin_dicom.zip -f reproin --bids -o bids_datasets
+```console
+$ heudiconv --files reproin_dicom.zip -f reproin --bids -o bids_datasets
 ```
 
 The command above should have created a directory structure as follows:
-```shell
-❯ tree -d
+```console
+$ tree -d
 .
 └── bids_datasets
     └── Patterson
@@ -63,7 +63,3 @@ The command above should have created a directory structure as follows:
 
 15 directories
 ```
-
-```console
-$ pip install jupyter-book
-$ jupyter-book build mybook/
