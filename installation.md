@@ -12,7 +12,7 @@ kernelspec:
   name: python3
 ---
 
-## Setup {#setup}
+## Installation
 
 First, open a terminal and check if `conda` is installed:
 
@@ -159,4 +159,4 @@ then make sure that the `cens` conda environment is activated:
 $ conda activate cens
 ```
 
-If the above command fails, make sure you have followed the [installation instructions](#setup).
+If the above command fails, make sure you have followed the [installation instructions](#installation).
