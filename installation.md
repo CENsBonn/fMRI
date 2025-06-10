@@ -109,10 +109,17 @@ Download the license file and copy it to the current working directory:
 $ cp ~/Downloads/license.txt .
 ```
 
-## fMRIPrep
+Ensure you have installed [Docker](https://docs.docker.com/get-started/get-docker/),
+then run `fMRIPrep` on the dataset:
 
 ```console
-$ fmriprep-docker bids_datasets/Patterson/Coben fmriprep_output participant --participant_label sub-001 --write-graph --fs-no-reconall --notrack --fs-license-file license.txt --work-dir fmriprep_tmp
+$ fmriprep-docker bids_datasets/Patterson/Coben fmriprep_output participant \
+    --participant_label sub-001 \
+    --write-graph \
+    --fs-no-reconall \
+    --notrack \
+    --fs-license-file license.txt \
+    --work-dir fmriprep_tmp
 ```
 
 The command takes approximately 30 minutes to finish. The majority of the time
