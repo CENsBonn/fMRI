@@ -12,7 +12,9 @@ kernelspec:
   name: python3
 ---
 
-## Installation
+# Installation
+
+## Setup
 
 First, open a terminal and check if `conda` is installed:
 
