@@ -1,9 +1,6 @@
 import logging
 from livereload import Server, shell
 
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module="pybtex")
-
 
 def main():
     server = Server()

@@ -2,3 +2,4 @@ jupyter-book
 livereload
 matplotlib
 numpy
+setuptools==80.8.0
