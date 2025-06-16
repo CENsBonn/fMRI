@@ -152,6 +152,119 @@ To look at the results, open `sub-001.html` in a browser:
 $ chromium fmriprep_output/sub-001.html
 ```
 
+## fMRIPrep (HPC)
+
+To access the Marvin HPC cluster, you need to [apply for access](https://www.hpc.uni-bonn.de/en/systems/marvin).
+Once you have access, you should
+generate a SSH keypair,
+upload your public key to [FreeIPA](https://freeipa.hpc.uni-bonn.de/),
+and connect to the cluster via
+SSH/SFTP according to the instructions in the [HPC wiki](https://wiki.hpc.uni-bonn.de/gaining_access).
+
+### Logging in
+
+To generate a keypair:
+
+```console
+$ ssh-keygen -t ed25519 -C "sebelin2@uni-bonn.de" -N "" -f ~/.ssh/marvin
+```
+
+To log in:
+
+```console
+$ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
+
+        Welcome to the marvin-cluster!
+        For more information check our wiki: https://wiki.hpc.uni-bonn.de
+
+[sebelin2_hpc@login02 ~]$ exit
+```
+
+### Uploading files
+
+To upload a file or directory (in this example, `bids_datasets`) using `rsync`:
+```console
+$ rsync -av --info=progress2 -e "ssh -i ~/.ssh/marvin" bids_datasets sebelin2_hpc@marvin.hpc.uni-bonn.de:~
+```
+
+To upload a file or directory using SFTP:
+```console
+$ sftp -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de <<< $'put -R bids_datasets'
+```
+
+### Running a sample SLURM job
+
+To run a sample job:
+
+```console
+$ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
+
+[sebelin2_hpc@login02 ~]$ git clone https://github.com/CENsBonn/tools
+Cloning into 'tools'...
+
+[sebelin2_hpc@login02 ~]$ cat ./tools/sample-job-script.sh
+[sebelin2_hpc@login02 ~]$ sbatch ./tools/sample-job-script.sh
+Submitted batch job 22273271
+```
+
+The sample job above creates a file named `generated_by_slurm.txt` in your home directory.
+The file should appear after a few seconds:
+
+```console
+[sebelin2_hpc@login02 ~]$ cat generated_by_slurm.txt
+This file was created using a SLURM job
+```
+
+In addition, a file will be generated containing the output of the script:
+
+```console
+[sebelin2_hpc@login02 ~]$ cat slurm-22273374.out
+Running sample job script...
+```
+
+### Running a fMRIPrep job
+
+Upload the FreeSurfer license to the HPC cluster:
+
+```console
+sftp -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de <<< $'put -R license.txt'
+```
+
+Create a `maindir` directory:
+
+```console
+[sebelin2_hpc@login02 ~]$ ./tools/setup-fmriprep.sh ./license.txt
+```
+
+The script above will create a directory structure as follows:
+
+```console
+[sebelin2_hpc@login02 ~]$ find maindir/
+maindir/
+maindir/work
+maindir/fmriprep
+maindir/fmriprep/license.txt
+maindir/fmriprep/fmriprep-20.2.0.simg
+maindir/derivatives
+maindir/data
+```
+
+Upload the contents of the `bids_datasets` to the `data` directory on the remote:
+
+```console
+$ rsync -av --info=progress2 -e "ssh -i ~/.ssh/marvin" bids_datasets/Patterson/Coben/ sebelin2_hpc@marvin.hpc.uni-bonn.de:~/maindir/data
+```
+
+On the remote, the contents of the `data` directory should now look like this:
+
+```console
+$ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
+
+[sebelin2_hpc@login01 ~]$ ls maindir/data/
+CHANGES			  participants.json  README	 sourcedata  task-rest_bold.json
+dataset_description.json  participants.tsv   scans.json  sub-001
+```
+
 ## Troubleshooting
 
 ### Command not found
