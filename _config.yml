@@ -3,7 +3,7 @@
 
 title: An introduction to human neuroimaging research
 author: Johannes Schultz, members of CENs @ University of Bonn, and MSC Neuroscience WPM28 class of 2023
-logo: logo-transparent.png
+logo: images/logo-transparent.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
