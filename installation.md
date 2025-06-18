@@ -425,7 +425,7 @@ $ ./list-jobs.sh
  job_20250618_145028_o3Bt 2025-06-18T14:50:30   02:13:03  COMPLETED
 ```
 
-Download the `outpu
+Download the `output/` directory of the job with the following command:
 
 ```console
 $ ./download-output.sh job_20250618_145028_o3Bt out
@@ -435,6 +435,13 @@ The command will download the `output/` directory of the specified job and save
 it to the `out/` directory on your machine.
 If the job is still in `RUNNING` state, the command above will wait until the
 job has finished before downloading the output.
+
+You can also specify `-` as the first argument to select the job from a list
+with `fzf`:
+
+```console
+$ ./download-output.sh - out
+```
 
 ```console
 $ tree out -d
