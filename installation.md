@@ -428,17 +428,17 @@ $ ./list-jobs.sh
 Download the `outpu
 
 ```console
-$ ./download-output.sh job_20250618_145028_o3Bt downloaded
+$ ./download-output.sh job_20250618_145028_o3Bt out
 ```
 
 The command will download the `output/` directory of the specified job and save
-it to the `downloaded/` directory on your machine.
+it to the `out/` directory on your machine.
 If the job is still in `RUNNING` state, the command above will wait until the
 job has finished before downloading the output.
 
 ```console
-$ tree downloaded -d
-downloaded
+$ tree out -d
+out
 ├── logs
 ├── sourcedata
 │   └── freesurfer
