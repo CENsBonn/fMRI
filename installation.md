@@ -161,15 +161,15 @@ upload your public key to [FreeIPA](https://freeipa.hpc.uni-bonn.de/),
 and connect to the cluster via
 SSH/SFTP according to the instructions in the [HPC wiki](https://wiki.hpc.uni-bonn.de/gaining_access).
 
-### Logging in
+### Log in
 
 To generate a keypair:
 
 ```console
-$ ssh-keygen -t ed25519 -C "sebelin2@uni-bonn.de" -N "" -f ~/.ssh/marvin
+$ ssh-keygen -t ed25519 -N "" -f ~/.ssh/marvin
 ```
 
-To log in:
+Make sure you are able to log in, then exit:
 
 ```console
 $ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
@@ -180,89 +180,308 @@ $ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
 [sebelin2_hpc@login02 ~]$ exit
 ```
 
-### Uploading files
-
-To upload a file or directory (in this example, `bids_datasets`) using `rsync`:
-```console
-$ rsync -av --info=progress2 -e "ssh -i ~/.ssh/marvin" bids_datasets sebelin2_hpc@marvin.hpc.uni-bonn.de:~
-```
-
-To upload a file or directory using SFTP:
-```console
-$ sftp -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de <<< $'put -R bids_datasets'
-```
-
-### Running a sample SLURM job
-
-To run a sample job:
+Add an entry to your local `~/.ssh/config`:
 
 ```console
-$ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
-
-[sebelin2_hpc@login02 ~]$ git clone https://github.com/CENsBonn/tools
-Cloning into 'tools'...
-
-[sebelin2_hpc@login02 ~]$ cat ./tools/sample-job-script.sh
-[sebelin2_hpc@login02 ~]$ sbatch ./tools/sample-job-script.sh
-Submitted batch job 22273271
+$ git clone https://github.com/CENsBonn/tools
+$ cd tools/
+$ ./configure-remote-connection.sh sebelin2_hpc ~/.ssh/marvin
 ```
 
-The sample job above creates a file named `generated_by_slurm.txt` in your home directory.
-The file should appear after a few seconds:
+The command above allows you to log in without having to specify your username
+or SSH key:
 
 ```console
-[sebelin2_hpc@login02 ~]$ cat generated_by_slurm.txt
-This file was created using a SLURM job
+$ ssh marvin
+
+        Welcome to the marvin-cluster!
+        For more information check our wiki: https://wiki.hpc.uni-bonn.de
+
+[sebelin2_hpc@login02 ~]$ exit
 ```
 
-In addition, a file will be generated containing the output of the script:
-
-```console
-[sebelin2_hpc@login02 ~]$ cat slurm-22273374.out
-Running sample job script...
-```
-
-### Running a fMRIPrep job
+### Set up fMRIPrep
 
 Upload the FreeSurfer license to the HPC cluster:
 
 ```console
-sftp -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de <<< $'put -R license.txt'
+$ ./upload-license.sh ../fMRI/example/license.txt
 ```
 
-Create a `maindir` directory:
+Build the fMRIPrep Singularity image on the HPC cluster:
 
 ```console
-[sebelin2_hpc@login02 ~]$ ./tools/setup-fmriprep.sh ./license.txt
+$ ./build-fmriprep-image.sh
 ```
 
-The script above will create a directory structure as follows:
+After running the commands above, a directory containing two new files should
+have appeared in your home directory:
 
 ```console
-[sebelin2_hpc@login02 ~]$ find maindir/
-maindir/
-maindir/work
-maindir/fmriprep
-maindir/fmriprep/license.txt
-maindir/fmriprep/fmriprep-20.2.0.simg
-maindir/derivatives
-maindir/data
+$ ssh marvin ls fmriprep/
+fmriprep-25.1.1.simg
+license.txt
 ```
 
-Upload the contents of the `bids_datasets` to the `data` directory on the remote:
+### Upload dataset
+
+The following command can be used to upload a BIDS converted directory to the
+remote server. The directory must contain a `dataset_description.json` file. In
+the example below, a new
+[workspace](https://wiki.hpc.uni-bonn.de/en/marvin/workspaces)
+will be created with the name `reproin` and expiry time `7` days, and the
+directory will be uploaded to that workspace.
 
 ```console
-$ rsync -av --info=progress2 -e "ssh -i ~/.ssh/marvin" bids_datasets/Patterson/Coben/ sebelin2_hpc@marvin.hpc.uni-bonn.de:~/maindir/data
+$ ./upload-input.sh ../fMRI/example/bids_datasets/Patterson/Coben reproin 7
 ```
 
-On the remote, the contents of the `data` directory should now look like this:
+A new workspace is now created and contains the uploaded files:
 
 ```console
-$ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
+$ ssh marvin ws_list
+id: reproin
+     workspace directory  : /lustre/scratch/data/sebelin2_hpc-reproin
+     remaining time       : 6 days 23 hours
+     creation time        : Tue Jun 17 14:12:11 2025
+     expiration date      : Tue Jun 24 14:12:11 2025
+     filesystem name      : scratch
+     available extensions : 3
 
-[sebelin2_hpc@login01 ~]$ ls maindir/data/
-CHANGES			  participants.json  README	 sourcedata  task-rest_bold.json
-dataset_description.json  participants.tsv   scans.json  sub-001
+$ ssh marvin ls /lustre/scratch/data/sebelin2_hpc-reproin/
+CHANGES
+dataset_description.json
+participants.json
+participants.tsv
+README
+scans.json
+sourcedata
+sub-001
+task-rest_bold.json
+```
+
+Alternatively, you can create a workspace manually using `ws_allocate` and
+upload files manually using `rsync` or `sftp`.
+
+### Run a sample SLURM job
+
+There is an example SLURM job script in the `tools` directory
+which you can use for testing.
+To run the job:
+
+```console
+$ ./run-job.sh reproin sample-job-script.slurm extra_argument another_argument
+
+Created job directory: jobs/job_20250618_113525_zodD
+sending incremental file list
+sample-job-script.slurm
+            275 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/1)
+
+sent 405 bytes  received 35 bytes  880.00 bytes/sec
+total size is 275  speedup is 0.62
+Info: creating workspace.
+/lustre/scratch/data/sebelin2_hpc-reproin_job_20250618_113525_zodD_out
+remaining extensions  : 3
+remaining time in days: 7
+Info: creating workspace.
+/lustre/scratch/data/sebelin2_hpc-reproin_job_20250618_113525_zodD_work
+remaining extensions  : 3
+remaining time in days: 1
+Submitted batch job 22282522
+```
+
+The command above submits a batch job based on the `sample-job-script.slurm`
+SLURM script. The first argument (`reproin`) is the name of the workspace
+containing the previously uploaded dataset.
+The extra arguments (`extra_argument`, `another_argument`) are optional
+and will be passed to the SLURM script.
+
+In the example above, the results of the job will be stored in the directory
+`~/jobs/job_20250618_113525_zodD` on the remote.
+For convenience, you can use the symbolic link `~/jobs/latest` to access this
+directory.
+Once the job has completed (after a few seconds),
+the directory will contain the following files:
+
+```console
+$ ssh marvin ls jobs/latest/
+input
+output
+sample-job-script.slurm
+slurm.out
+work
+```
+
+`input` is a symbolic link to the workspace directory containing the uploaded
+files:
+
+```console
+$ ssh marvin ls jobs/latest/input
+CHANGES
+dataset_description.json
+participants.json
+participants.tsv
+README
+scans.json
+sourcedata
+sub-001
+task-rest_bold.json
+```
+
+The printed output of the job is stored in `slurm.out`.
+To inspect it:
+
+```console
+$ ssh marvin cat jobs/latest/slurm.out
+Running sample job script with arguments: extra_argument another_argument
+Input directory: input
+Output directory: output
+Work directory: work
+```
+
+The job script (`sample-job-script.slurm`) is programmed to
+write an example file to the output directory. To inspect it:
+
+```console
+$ ssh marvin ls jobs/latest/output
+generated_by_sample_job.txt
+
+$ ssh marvin cat jobs/latest/output/generated_by_sample_job.txt
+This output was generated by the sample SLURM job
+```
+
+### Run an fMRIPrep job
+
+To run `fMRIPrep` on the uploaded dataset, you can use the following command:
+
+```console
+$ ./run-job.sh reproin fmriprep.slurm sub-001
+```
+
+The extra argument `sub-001` above is the label of the participant you would
+like to process.
+
+If you'd like to receive an email notification when the job is finishes, you
+can edit `fmriprep.slurm` and add a `--mail-user` option before running it:
+
+```diff
+diff --git a/fmriprep.slurm b/fmriprep.slurm
+index 02a899b..93e14b7 100755
+--- a/fmriprep.slurm
++++ b/fmriprep.slurm
+@@ -5,6 +5,7 @@
+ #SBATCH --cpus-per-task=32
+ #SBATCH --mem=32000
+ #SBATCH --mail-type=END,FAIL,TIME_LIMIT
++#SBATCH --mail-user=sebelin2@uni-bonn.de
+ #SBATCH --time=03:00:00
+
+ set -Eeuo pipefail
+```
+
+To monitor the job, you can `tail` the printed output. Th output will then be
+printed to your terminal continuously:
+
+```console
+$ ./tail-output.sh
+250618-12:22:11,496 nipype.workflow INFO:
+	 [Node] Executing "_denoise0" <nipype.interfaces.ants.segmentation.DenoiseImage>
+250618-12:22:15,738 nipype.workflow INFO:
+	 [Node] Finished "lap_tmpl", elapsed time 7.441261s.
+250618-12:22:17,377 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_25_1_wf.sub_001_wf.anat_fit_wf.brain_extraction_wf.mrg_tmpl" in "/work/fmriprep_25_1_wf/sub_001_wf/anat_fit_wf/brain_extraction_wf/mrg_tmpl".
+250618-12:22:17,398 nipype.workflow INFO:
+	 [Node] Executing "mrg_tmpl" <nipype.interfaces.utility.base.Merge>
+250618-12:22:17,399 nipype.workflow INFO:
+	 [Node] Finished "mrg_tmpl", elapsed time 0.000148s.
+```
+
+To stop printing, press CTRL+C. The job will continue running.
+
+During the execution of the job, the `output/` and `work/` directories
+will be populated with files. You can confirm this like so:
+
+```console
+$ ssh marvin "ls jobs/latest/output"
+logs
+sourcedata
+sub-001
+
+$ ssh marvin "ls jobs/latest/work"
+20250618-122136_a141b6e7-e245-47f7-9900-6c679a2ddef4
+fmriprep_25_1_wf
+```
+
+### Download the output
+
+Once the job has finished, you can download the output directory to your local
+filesystem.
+First list the running jobs:
+
+```console
+$ ./list-jobs.sh
+                  JobName               Start    Elapsed      State
+------------------------- ------------------- ---------- ----------
+ job_20250618_145028_o3Bt 2025-06-18T14:50:30   02:13:03  COMPLETED
+```
+
+Download the `outpu
+
+```console
+$ ./download-output.sh job_20250618_145028_o3Bt downloaded
+```
+
+The command will download the `output/` directory of the specified job and save
+it to the `downloaded/` directory on your machine.
+If the job is still in `RUNNING` state, the command above will wait until the
+job has finished before downloading the output.
+
+```console
+$ tree downloaded -d
+downloaded
+├── logs
+├── sourcedata
+│   └── freesurfer
+│       ├── fsaverage
+│       │   ├── label
+│       │   ├── mri
+│       │   │   ├── orig
+│       │   │   └── transforms
+│       │   │       └── bak
+│       │   ├── mri.2mm
+│       │   ├── scripts
+│       │   ├── surf
+│       │   └── xhemi
+│       │       ├── bem
+│       │       ├── label
+│       │       ├── mri
+│       │       │   ├── orig
+│       │       │   └── transforms
+│       │       │       └── bak
+│       │       ├── scripts
+│       │       ├── src
+│       │       ├── stats
+│       │       ├── surf
+│       │       ├── tmp
+│       │       ├── touch
+│       │       └── trash
+│       └── sub-001
+│           ├── label
+│           ├── mri
+│           │   ├── orig
+│           │   └── transforms
+│           │       └── bak
+│           ├── scripts
+│           ├── stats
+│           ├── surf
+│           ├── tmp
+│           ├── touch
+│           └── trash
+└── sub-001
+    ├── anat
+    ├── figures
+    └── log
+        └── 20250618-122136_a141b6e7-e245-47f7-9900-6c679a2ddef4
 ```
 
 ## Troubleshooting
