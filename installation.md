@@ -621,3 +621,36 @@ $ conda activate cens
 ```
 
 If the above command fails, make sure you have followed the [installation instructions](#installation).
+
+### Job exits in `FAILED` status
+
+Under certain conditions, the `apptainer` command of your SLURM job may fail
+with exit code `1`. Below is an example of this:
+
+```console
+$ ./list-jobs.sh
+
+[...]
+ job_20250623_164344_Nhyr 2025-06-23T16:43:50   07:33:03     FAILED
+```
+
+Yet, the output of fMRIPrep does not contain any errors, and even reports
+success:
+
+```console
+$ ./tail-output.sh jobs/job_20250623_164344_Nhyr/slurm.out
+
+[...]
+250624-00:16:51,945 nipype.workflow IMPORTANT:
+	 fMRIPrep finished successfully!
+[...]
+```
+
+The reason behind this `FAILED` status is currently not fully understood. The
+behavior has been observed on at least fMRIPrep version `25.1.1`.
+[One thread](https://neurostars.org/t/exit-code-1-despite-no-error-in-logs/30164/19?page=2)
+suggests that it is due to a version warning, but this has been observed even
+without any version warning in the output. It appears that the job successfully
+exits with `COMPLETED` status if the `--fs-no-reconall` option is passed. This
+would indicate that the failure arises from the FreeSurfer surface
+preprocessing step.
