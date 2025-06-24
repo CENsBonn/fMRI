@@ -14,15 +14,26 @@ kernelspec:
 
 # Installation
 
+The following is a step-by-step guide on how to run
+[fMRIPrep](https://fmriprep.org)
+on a HPC cluster at CENs. It is assumed that you have access to MRI files in
+DICOM or BIDS format.
+
 ## Setup
 
-First, open a terminal and check if `conda` is installed:
+First, open a terminal. If you are using Windows, you should install
+[WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and run all
+commands below within WSL.
+
+Check if `conda` is installed:
 
 ```console
 $ conda info
 ```
 
-If you get a `command not found` error, [install Conda](https://conda-forge.org/download/).
+If you get a `command not found` error,
+[install Conda](https://conda-forge.org/download/)
+and try again.
 
 Next, create a environment and install the required packages:
 
@@ -37,6 +48,8 @@ $ pip install heudiconv
 $ pip install fmriprep-docker
 ```
 
+You should get output similar to the following:
+
 ```console
 $ conda env list
 
@@ -48,17 +61,24 @@ cens                 * /home/sebelino/miniforge3/envs/cens
 
 ## BIDS conversion
 
-Download an example dataset:
+If your dataset is already in BIDS format, you can skip this section.
+
+In this guide, we will make use of an example DICOM dataset named `reproin`.
+Download it by running:
 
 ```console
 $ wget https://datasets.datalad.org/repronim/heudiconv-reproin-example/reproin_dicom.zip
 ```
 
-Convert with `heudiconv`:
+Convert it to BIDS with `heudiconv`:
 
 ```console
 $ heudiconv --files reproin_dicom.zip -f reproin --bids -o bids_datasets
 ```
+
+In the command above, the `--files` option accepts a zip file
+(`reproin_dicom.zip`), but it is also possible to
+supply a path to a directory containing the DICOM files.
 
 The command above should have created a directory structure as follows:
 ```console
@@ -82,13 +102,27 @@ $ tree -d
 15 directories
 ```
 
-Validate the dataset with `bids-validator`:
+In this case, the `Coben` directory contains the BIDS converted data, because
+it contains the `dataset_description.json` file:
+
+```console
+$ find bids_datasets/ -name dataset_description.json
+bids_datasets/Patterson/Coben/dataset_description.json
+```
+
+If desired, validate the dataset with `bids-validator`:
 
 ```console
 $ deno run -ERWN jsr:@bids/validator bids_datasets/Patterson/Coben/
 ```
 
-## fMRIPrep
+## fMRIPrep (Local host)
+
+At this point, it is assumed that you have a directory containing a BIDS
+dataset in the directory `bids_datasets/Patterson/Coben/`. This section will
+explain how to run `fMRIPrep` on the dataset on your local machine.
+
+### Obtain a FreeSurfer license
 
 Before running `fMRIPrep`, you need to obtain a license file for FreeSurfer.
 Fill out the form on the following page to obtain a
@@ -110,6 +144,8 @@ Download the license file and copy it to the current working directory:
 ```
 $ cp ~/Downloads/license.txt .
 ```
+
+### Run fMRIPrep
 
 Ensure you have installed [Docker](https://docs.docker.com/get-started/get-docker/),
 then run `fMRIPrep` on the dataset:
@@ -223,17 +259,92 @@ fmriprep-25.1.1.simg
 license.txt
 ```
 
-### Upload dataset
+### Upload DICOM dataset
+
+Let us assume that you have access to an external hard drive containing a
+directory with DICOM files. If the directory is very large (100+ GB), you may
+want to upload it to the HPC cluster before processing it further.
+
+Mount the external hard drive and find the directory containing the DICOM
+files:
+
+```console
+$ sudo mount /dev/sda2 /mnt
+$ ls /mnt/
+```
+
+Let us assume that the directory `/mnt/path/to/dicom_dir/` contains
+subdirectories named `sub-102`, `sub-103`, etc. Each subdirectory in turn
+contains `.dcm` files. Upload this directory to the HPC cluster using `rsync`:
+
+```console
+$ ./upload-input.sh /mnt/path/to/dicom_dir/ reproin-dicom 60
+```
+
+The command above creates a new
+[workspace](https://wiki.hpc.uni-bonn.de/en/marvin/workspaces) on the HPC
+cluster with the name `reproin-dicom` and an expiry time of `60` days.
+The directory is then uploaded to this workspace directory.
+You can confirm that the upload was successful by finding the workspace
+directory and listing files within it:
+
+```console
+$ ssh marvin ws_list
+$ ssh marvin ls /lustre/scratch/data/sebelin2_hpc-reproin-dicom/
+```
+
+### Convert BIDS dataset
+
+We assume that you have followed the previous section and uploaded a DICOM
+dataset to the `reproin-dicom` workspace on the HPC cluster. The next step is
+to create a new workspace, `reproin-bids`, containing the same dataset but
+converted to BIDS format using [HeuDiConv](https://github.com/nipy/heudiconv).
+
+To do this for the `reproin` dataset, run the following command:
+
+```console
+$ ./exec-remote.sh remote-bids-convert.sh social-detection-7t-dicom social-detection-7t-bids reproin
+```
+
+The command above will run the `remote-bids-convert.sh` script on the remote
+server. This script in turn accepts three parameters:
+
+* `social-detection-7t-dicom`: The name of the workspace containing the
+  DICOM dataset to be converted.
+* `social-detection-7t-bids`: The name of the workspace to be created
+  containing the converted BIDS dataset.
+* `reproin`: A [HeuDiConv](https://github.com/nipy/heudiconv) heuristic.
+
+The third argument, `reproin`, refers to a built-in heuristic. This is specific
+recipe for converting DICOM files to BIDS format. Depending on your dataset,
+you may need to change this argument to refer to a different built-in
+heuristic. If no built-in heuristic is suitable for your dataset, you need to
+write your own custom heuristic in the form of a Python script.
+
+A set of built-in heuristics can be found in the
+[HeuDiConv repository](https://github.com/nipy/heudiconv/tree/2a15cdfa913d2288f08198db2196047c90711e1b/heudiconv/heuristics).
+
+If you need to write a custom heuristic, upload it to the
+[tools repository](https://github.com/CENsBonn/tools/tree/main/heuristics)
+and pull the changes on the server side by running
+`ssh marvin git -C ./tools pull`.
+Then insert the path to the heuristic in the third argument. Example:
+
+```console
+$ ./exec-remote.sh remote-bids-convert.sh social-detection-7t-dicom social-detection-7t-bids ./tools/heuristics/7t.py
+```
+
+### Upload BIDS dataset
 
 The following command can be used to upload a BIDS converted directory to the
-remote server. The directory must contain a `dataset_description.json` file. In
-the example below, a new
+remote server. The directory to be uploaded must contain a
+`dataset_description.json` file. In the example below, a new
 [workspace](https://wiki.hpc.uni-bonn.de/en/marvin/workspaces)
 will be created with the name `reproin` and expiry time `7` days, and the
 directory will be uploaded to that workspace.
 
 ```console
-$ ./upload-input.sh ../fMRI/example/bids_datasets/Patterson/Coben reproin 7
+$ ./upload-input-bids.sh ../fMRI/example/bids_datasets/Patterson/Coben reproin 7
 ```
 
 A new workspace is now created and contains the uploaded files:
@@ -361,7 +472,7 @@ $ ./run-job.sh reproin fmriprep.slurm sub-001
 The extra argument `sub-001` above is the label of the participant you would
 like to process.
 
-If you'd like to receive an email notification when the job is finishes, you
+If you'd like to receive an email notification when the job finishes, you
 can edit `fmriprep.slurm` and add a `--mail-user` option before running it:
 
 ```diff
@@ -442,6 +553,8 @@ with `fzf`:
 ```console
 $ ./download-output.sh - out
 ```
+
+Example output directory structure:
 
 ```console
 $ tree out -d
