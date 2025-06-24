@@ -70,7 +70,8 @@ Download it by running:
 $ wget https://datasets.datalad.org/repronim/heudiconv-reproin-example/reproin_dicom.zip
 ```
 
-Convert it to BIDS with `heudiconv`:
+Convert it to BIDS with
+[HeuDiConv](https://heudiconv.readthedocs.io/en/latest/):
 
 ```console
 $ heudiconv --files reproin_dicom.zip -f reproin --bids -o bids_datasets
@@ -298,7 +299,7 @@ $ ssh marvin ls /lustre/scratch/data/sebelin2_hpc-reproin-dicom/
 We assume that you have followed the previous section and uploaded a DICOM
 dataset to the `reproin-dicom` workspace on the HPC cluster. The next step is
 to create a new workspace, `reproin-bids`, containing the same dataset but
-converted to BIDS format using [HeuDiConv](https://github.com/nipy/heudiconv).
+converted to BIDS format using [HeuDiConv](https://heudiconv.readthedocs.io/en/latest/).
 
 To do this for the `reproin` dataset, run the following command:
 
