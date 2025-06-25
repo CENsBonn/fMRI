@@ -14,4 +14,9 @@ parts:
     chapters:
     - file: data-repositories
     - file: installation
+    - file: hpc-overview
+      sections:
+      - file: hpc-setup
+      - file: hpc-upload
+      - file: hpc-process
     - file: code
