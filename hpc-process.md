@@ -291,53 +291,26 @@ BIDS dataset.
 
 ## Run an fMRIPrep job
 
-To run `fMRIPrep` on the uploaded dataset, you can use the following command:
+To run `fMRIPrep` on the uploaded `reproin`, you can use the following command:
 
 ```console
-$ ./run-job.sh reproin fmriprep.slurm sub-001
+$ ./run-job.sh reproin-bids ./job/reproin-fmriprep
 ```
 
-The extra argument `sub-001` above is the label of the participant you would
-like to process.
-
-If you'd like to receive an email notification when the job finishes, you
-can edit `fmriprep.slurm` and add a `--mail-user` option before running it:
-
-```diff
-diff --git a/fmriprep.slurm b/fmriprep.slurm
-index 02a899b..93e14b7 100755
---- a/fmriprep.slurm
-+++ b/fmriprep.slurm
-@@ -5,6 +5,7 @@
- #SBATCH --cpus-per-task=32
- #SBATCH --mem=32000
- #SBATCH --mail-type=END,FAIL,TIME_LIMIT
-+#SBATCH --mail-user=sebelin2@uni-bonn.de
- #SBATCH --time=03:00:00
-
- set -Eeuo pipefail
-```
-
-To monitor the job, you can `tail` the printed output. Th output will then be
-printed to your terminal continuously:
+If you are working with the `social-detection-7t` dataset, run:
 
 ```console
-$ ./tail-output.sh
-250618-12:22:11,496 nipype.workflow INFO:
-	 [Node] Executing "_denoise0" <nipype.interfaces.ants.segmentation.DenoiseImage>
-250618-12:22:15,738 nipype.workflow INFO:
-	 [Node] Finished "lap_tmpl", elapsed time 7.441261s.
-250618-12:22:17,377 nipype.workflow INFO:
-	 [Node] Setting-up "fmriprep_25_1_wf.sub_001_wf.anat_fit_wf.brain_extraction_wf.mrg_tmpl" in "/work/fmriprep_25_1_wf/sub_001_wf/anat_fit_wf/brain_extraction_wf/mrg_tmpl".
-250618-12:22:17,398 nipype.workflow INFO:
-	 [Node] Executing "mrg_tmpl" <nipype.interfaces.utility.base.Merge>
-250618-12:22:17,399 nipype.workflow INFO:
-	 [Node] Finished "mrg_tmpl", elapsed time 0.000148s.
+$ ./run-job.sh social-detection-7t-bids ./job/social-detection-7t-fmriprep
 ```
 
-To stop printing, press CTRL+C. The job will continue running.
+As the `social-detection-7t-bids` dataset contains 60 subjects, 60 jobs will be
+spawned and processed in parallel. Each job takes 7-8 hours to complete.
 
-During the execution of the job, the `output/` and `work/` directories
+If your dataset is different, make a copy of
+[`job/social-detection-7t-fmriprep/`](https://github.com/CENsBonn/tools/tree/main/job/social-detection-7t-heudiconv)
+and adjust the scripts to fit your dataset.
+
+During the execution of a job, the `output/` and `work/` directories
 will be populated with files. You can confirm this like so:
 
 ```console
@@ -351,104 +324,20 @@ $ ssh marvin "ls jobs/latest/work"
 fmriprep_25_1_wf
 ```
 
-### Download the output
+## Email notifications
 
-Once the job has finished, you can download the output directory to your local
-filesystem.
-First list the running jobs:
+If you'd like to receive an email notification when a job finishes, you
+can edit your `job.slurm` and add a `--mail-user` option before running it:
 
-```console
-$ ./list-jobs.sh
-                  JobName               Start    Elapsed      State
-------------------------- ------------------- ---------- ----------
- job_20250618_145028_o3Bt 2025-06-18T14:50:30   02:13:03  COMPLETED
-```
-
-Download the `output/` directory of the job with the following command:
-
-```console
-$ ./download-output.sh job_20250618_145028_o3Bt out
-```
-
-The command will download the `output/` directory of the specified job and save
-it to the `out/` directory on your machine.
-If the job is still in `RUNNING` state, the command above will wait until the
-job has finished before downloading the output.
-
-You can also specify `-` as the first argument to select the job from a list
-with `fzf`:
-
-```console
-$ ./download-output.sh - out
-```
-
-Example output directory structure:
-
-```console
-$ tree out -d
-out
-├── logs
-├── sourcedata
-│   └── freesurfer
-│       ├── fsaverage
-│       │   ├── label
-│       │   ├── mri
-│       │   │   ├── orig
-│       │   │   └── transforms
-│       │   │       └── bak
-│       │   ├── mri.2mm
-│       │   ├── scripts
-│       │   ├── surf
-│       │   └── xhemi
-│       │       ├── bem
-│       │       ├── label
-│       │       ├── mri
-│       │       │   ├── orig
-│       │       │   └── transforms
-│       │       │       └── bak
-│       │       ├── scripts
-│       │       ├── src
-│       │       ├── stats
-│       │       ├── surf
-│       │       ├── tmp
-│       │       ├── touch
-│       │       └── trash
-│       └── sub-001
-│           ├── label
-│           ├── mri
-│           │   ├── orig
-│           │   └── transforms
-│           │       └── bak
-│           ├── scripts
-│           ├── stats
-│           ├── surf
-│           ├── tmp
-│           ├── touch
-│           └── trash
-└── sub-001
-    ├── anat
-    ├── figures
-    └── log
-        └── 20250618-122136_a141b6e7-e245-47f7-9900-6c679a2ddef4
+```diff
+ #SBATCH --mem=32000
+ #SBATCH --export=NONE
+ #SBATCH --mail-type=END,FAIL,TIME_LIMIT
++#SBATCH --mail-user=sebelin2@uni-bonn.de
+ #SBATCH --time=10:00:00
 ```
 
 ## Troubleshooting
-
-### Command not found
-
-If you get an error similar to the following:
-
-```console
-zsh: command not found: fmriprep-docker
-```
-
-then make sure that the `cens` conda environment is activated:
-
-```console
-$ conda activate cens
-```
-
-If the above command fails, make sure you have followed the [installation instructions](#installation).
 
 ### Job exits in `FAILED` status
 

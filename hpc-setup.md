@@ -78,7 +78,8 @@ $ ssh marvin
 
 ## Set up fMRIPrep
 
-Upload the [FreeSurfer license](./installation) to the HPC cluster:
+See {ref}`id-obtain-a-freesurfer-license` for how to obtain a FreeSurfer license.
+Upload the license to the HPC cluster:
 
 ```console
 $ ./upload-license.sh ./path/to/license.txt

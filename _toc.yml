@@ -13,10 +13,15 @@ parts:
   - caption: Practice
     chapters:
     - file: data-repositories
-    - file: installation
+    - file: local-setup-overview
+      sections:
+      - file: local-setup-environment
+      - file: local-setup-bids-conversion
+      - file: local-setup-fmriprep
     - file: hpc-overview
       sections:
       - file: hpc-setup
       - file: hpc-upload
       - file: hpc-process
+      - file: hpc-download
     - file: code
