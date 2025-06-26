@@ -26,11 +26,11 @@ example SLURM job script
 ([`example/job.slurm`](https://github.com/CENsBonn/tools/blob/main/job/example/job.slurm))
 which you can use to test running a SLURM job.
 The script runs quickly and simply counts the number of files in your dataset.
-To run the job:
+Run the job like so:
 
 ```console
 $ cd tools/
-$ ./run-job.sh reproin ./job/example/job.slurm -- extra_argument another_argument
+$ ./run-job.sh reproin-dicom ./job/example -- extra_argument another_argument
 
 Created job directory: jobs/job_20250618_113525_zodD
 sending incremental file list
@@ -40,21 +40,24 @@ job.slurm
 sent 405 bytes  received 35 bytes  880.00 bytes/sec
 total size is 275  speedup is 0.62
 Info: creating workspace.
-/lustre/scratch/data/sebelin2_hpc-reproin_job_20250618_113525_zodD_out
+/lustre/scratch/data/sebelin2_hpc-reproin-dicom_job_20250618_113525_zodD_out
 remaining extensions  : 3
 remaining time in days: 7
 Info: creating workspace.
-/lustre/scratch/data/sebelin2_hpc-reproin_job_20250618_113525_zodD_work
+/lustre/scratch/data/sebelin2_hpc-reproin-dicom_job_20250618_113525_zodD_work
 remaining extensions  : 3
 remaining time in days: 1
 Submitted batch job 22282522
 ```
 
 The command above submits a batch job based on the `example/job.slurm`
-SLURM script. The first argument (`reproin`) is the name of the workspace
-containing the dataset you uploaded earlier.
-The extra arguments (`extra_argument`, `another_argument`) are optional
-and will be passed to the SLURM script.
+SLURM script.
+
+* The first argument (`reproin-dicom`) is the name of the workspace containing
+the dataset you uploaded earlier.
+* The second argument (`./job/example`) is the directory containing the `job.slurm` script.
+* The extra arguments (`extra_argument`, `another_argument`) are optional and
+will be passed to the SLURM script.
 
 In the example above, the results of the job will be stored in the directory
 `~/jobs/job_20250618_113525_zodD` on the remote.
@@ -73,7 +76,7 @@ the job directory will contain the following files:
 $ ssh marvin ls jobs/latest/
 input
 output
-job.slurm
+scripts
 slurm.out
 work
 ```
@@ -117,11 +120,35 @@ $ ssh marvin ls jobs/latest/output
 generated_by_sample_job.txt
 
 $ ssh marvin cat jobs/latest/output/generated_by_sample_job.txt
-The /lustre/scratch/data/sebelin2_hpc-reproin directory contains 43 files.
+The /lustre/scratch/data/sebelin2_hpc-reproin-dicom directory contains 791 files.
 ```
 
 `work` is a symlink to a workspace where temporary files may be written by the
 job. In this example, the SLURM script does not touch it at all.
+
+## Monitor output of job
+
+While running a long-running job, you may want to monitor its progress in
+real-time. You can monitor the contents of the file `jobs/latest/slurm.out` by
+running:
+
+```console
+$ ./tail-output.sh
+
+Running sample job script with arguments: extra_argument another_argument
+Input directory: input
+Output directory: output
+Work directory: work
+```
+
+The command above will continuously print the output of the job to your
+terminal while the job is running. Press `CTRL+C` to stop.
+
+If you want to monitor a specific file, pass it as an argument like so:
+
+```console
+$ ./tail-output.sh jobs/job_20250625_145225_Y32s/slurm.out
+```
 
 ## List jobs
 
@@ -144,9 +171,9 @@ You can view a list of existing workspaces by running:
 
 ```console
 $ ./list-ws.sh
-reproin
-reproin_job_20250618_113525_zodD_out
-reproin_job_20250618_113525_zodD_work
+reproin-dicom
+reproin-dicom_job_20250618_113525_zodD_out
+reproin-dicom_job_20250618_113525_zodD_work
 ```
 
 ## Delete a workspace
@@ -163,8 +190,8 @@ Use the up/down arrow keys and press `Tab` to select one or more workspaces.
 
 ```
 Selected workspaces:
-reproin_job_20250625_120537_yhW3_work
-reproin_job_20250625_120537_yhW3_out
+reproin-dicom_job_20250625_120537_yhW3_work
+reproin-dicom_job_20250625_120537_yhW3_out
 Release these workspaces? [y/n]
 ```
 
@@ -173,7 +200,7 @@ Type `y` to confirm the deletion of the selected workspaces.
 Alternatively, you can specify the name of the workspace as an argument:
 
 ```console
-$ ./release-ws.sh reproin_job_20250625_120537_yhW3_work
+$ ./release-ws.sh reproin-dicom_job_20250625_120537_yhW3_work
 ```
 
 ## Convert DICOM to BIDS
@@ -189,10 +216,10 @@ If your use case is different, feel free to skip this section.
 The next step is
 to convert the DICOM files to BIDS format using
 [HeuDiConv](https://heudiconv.readthedocs.io/en/latest/).
-To do this for the `reproin` dataset, run the following command:
+To do this for the `reproin-dicom` dataset, run the following command:
 
 ```console
-$ ./run-job.sh reproin ./job/reproin-heudiconv/job.slurm
+$ ./run-job.sh reproin-dicom ./job/reproin-heudiconv/job.slurm
 ```
 
 Below is another example based on the `social-detection-7t` dataset.
@@ -204,9 +231,7 @@ and creates a SLURM job array. Meaning, if the dataset contains
 DICOM files for 60 subjects, 60 SLURM jobs will be created
 and processed in parallel:
 ```console
-$ ./run-job.sh social-detection-7t-dicom-small \
-    ./job/social-detection-7t-heudiconv/job.slurm \
-    -p ./job/social-detection-7t-heudiconv/hook.sh
+$ ./run-job.sh social-detection-7t-dicom ./job/social-detection-7t-heudiconv
 ```
 
 If you are working with a different dataset, you may need to make
@@ -217,8 +242,8 @@ For example, you may need to change to a different
 [HeuDiConv](https://github.com/nipy/heudiconv) heuristic.
 A heuristic is specific
 recipe for converting DICOM files to BIDS format.
-In the case of the `reproin` dataset, the built-in `reproin` heuristic is used.
-Depending on your dataset,
+In the case of the `reproin-dicom` dataset, the built-in `reproin` heuristic is
+used. Depending on your dataset,
 you may need to change this argument to refer to a different built-in
 heuristic. If no built-in heuristic is suitable for your dataset, you need to
 write your own custom heuristic in the form of a Python script.
@@ -236,7 +261,33 @@ Then specify the path to the heuristic Python file in the SLURM script. Example:
 + heuristic="$HOME/tools/job/social-detection-7t-heudiconv/heuristic.py"
 ```
 
+Once you have run the HeuDiConv job, the output workspace will
+contain the converted BIDS dataset.
+The output workspace will have a name like `reproin_job_20250625_150428_ilac_out`.
+You may want to rename this workspace to something simpler,
+e.g. `reproin-bids`. See: {ref}`id-rename-a-workspace`.
 
+(id-rename-a-workspace)=
+## Rename a workspace
+
+Let us assume you want to rename a workspace named `reproin_job_20250625_150428_ilac_out`
+to `reproin-bids`. The renamed workspace should have an expiry time of `7` days.
+Run the following command:
+
+```console
+$ ./rename-ws.sh reproin_job_20250625_150428_ilac_out reproin-bids 7
+```
+
+## Validate BIDS dataset
+
+Validate your BIDS dataset using Bids Validator like so:
+
+```console
+$ ./bids-validate.sh reproin-bids
+```
+
+The first argument (`reproin-bids`) is the name of the workspace containing the
+BIDS dataset.
 
 ## Run an fMRIPrep job
 
