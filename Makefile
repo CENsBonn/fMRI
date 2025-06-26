@@ -1,3 +1,6 @@
+help:
+	@echo "Make what? Try 'make build', 'make build-strict', 'make serve', 'make clean' or 'make all'."
+
 all: build
 
 build:
