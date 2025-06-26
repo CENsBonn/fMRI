@@ -19,6 +19,7 @@ Create an environment, activate it, and install the required packages:
 conda create -n jbook
 conda activate jbook
 conda install -y -c conda-forge python
+cd fMRI/
 pip install -r requirements.txt 
 ```
 
