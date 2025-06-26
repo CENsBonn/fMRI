@@ -16,11 +16,12 @@ kernelspec:
 
 Once you are able to connect to the HPC cluster,
 you will want to upload your dataset to it.
-This depends on your use case.
+The next steps will depend on your use case.
 
 * Is your dataset DICOM data?
   * If yes, is the dataset too big or computationally expensive to be processed further on your local machine?
     * If yes, see: {ref}`id-upload-dicom-dataset`.
+    * If no, {doc}`run BIDS conversion locally<local-setup-bids-conversion>`.
 * Is your dataset BIDS data?
   * If yes, see: {ref}`id-upload-bids-dataset`.
 

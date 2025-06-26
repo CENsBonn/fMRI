@@ -58,9 +58,18 @@ base                   /home/sebelino/miniforge3
 cens                 * /home/sebelino/miniforge3/envs/cens
 ```
 
+Importantly, make sure you have activated your Conda environment:
+
+```console
+$ conda activate cens
+```
+
+You will need to run the command above every time you open a new terminal.
+
+(id-clone-tools-repository)=
 ## Clone tools repository
 
-Open a terminal and clone the
+Clone the
 [tools](https://github.com/CENsBonn/tools)
 repository:
 ```console
@@ -71,5 +80,9 @@ Alternatively:
 $ git clone git@github.com:CENsBonn/tools
 ```
 
-If you would like to process data locally, proceed to {doc}`local-setup-bids-conversion`.
-If you would like to process data on the HPC cluster, proceed to {doc}`hpc-overview`.
+## Next steps
+
+If you would like to process fMRI data locally, proceed to {doc}`local-setup-bids-conversion`.
+
+If you would like to process data on the HPC cluster, jump ahead to the
+{doc}`HPC guide<hpc-overview>`.

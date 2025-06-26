@@ -16,6 +16,8 @@ kernelspec:
 
 The following is a guide on how to connect to the HPC
 cluster at CENs.
+Before proceeding, make sure you have
+{doc}`set up your local environment<local-setup-environment>`.
 
 ## Apply for access
 
@@ -54,9 +56,10 @@ Then exit:
 [sebelin2_hpc@login02 ~]$ exit
 ```
 
-Enter the [tools](./installation) repository
-and add an entry to your local `~/.ssh/config` by running
-the command below:
+Enter the
+{ref}`tools<id-clone-tools-repository>`
+repository and add an entry to your local `~/.ssh/config` by running the
+command below:
 
 ```console
 $ cd tools/
