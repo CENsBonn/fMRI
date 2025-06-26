@@ -4,7 +4,11 @@
 
 Open a terminal and clone the repository:
 ```bash
-git https://github.com:CENsBonn/fMRI
+git clone https://github.com/CENsBonn/fMRI
+```
+Alternatively:
+```bash
+git clone git@github.com:CENsBonn/fMRI
 ```
 
 Install [Conda](https://conda-forge.org/download/)
