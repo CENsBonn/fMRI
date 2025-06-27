@@ -21,7 +21,7 @@ If you would like to do this on the HPC cluster instead, please
 refer to the {doc}`HPC guide<hpc-overview>`.
 
 (id-obtain-a-freesurfer-license)=
-### Obtain a FreeSurfer license
+## Obtain a FreeSurfer license
 
 Before running `fMRIPrep`, you need to obtain a license file for FreeSurfer.
 Fill out the form on the following page to obtain a
@@ -44,7 +44,7 @@ Download the license file and copy it to the current working directory:
 $ cp ~/Downloads/license.txt .
 ```
 
-### Run fMRIPrep
+## Run fMRIPrep
 
 Ensure you have installed [Docker](https://docs.docker.com/get-started/get-docker/),
 then run `fMRIPrep` on the dataset:
