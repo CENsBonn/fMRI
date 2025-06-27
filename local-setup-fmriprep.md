@@ -103,4 +103,4 @@ then make sure that the `cens` conda environment is activated:
 $ conda activate cens
 ```
 
-If the above command fails, make sure you have followed the [installation instructions](#installation).
+If the above command fails, make sure you have followed the [local setup instructions](#local-setup-environment).
