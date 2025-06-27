@@ -113,3 +113,5 @@ $ ./browse-remote.sh jobs/latest/output
 ```
 
 Now enter http://localhost:8080 in the address bar of your web browser.
+
+![Example browsing session with port-forwarding](./images/browsing-example.png)
