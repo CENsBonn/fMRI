@@ -44,6 +44,8 @@ make serve
 
 Open http://localhost:8008 in your browser.
 
+![image](https://github.com/user-attachments/assets/1973f3de-939a-4d63-a295-4a8820ae173b)
+
 Now, try editing a file, e.g. `intro.md`.
 Upon saving the file, the Jupyter
 Book should automatically rebuild and refresh in your browser
