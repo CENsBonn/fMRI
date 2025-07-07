@@ -28,6 +28,7 @@ repository:
 exclude_patterns:
   - gitignore
   - README.md
+  - HPC.md
 
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
