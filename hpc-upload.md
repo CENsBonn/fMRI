@@ -73,26 +73,26 @@ The following command can be used to upload a BIDS converted directory to the
 remote server. The directory to be uploaded must contain a
 `dataset_description.json` file. In the example below, a new
 [workspace](https://wiki.hpc.uni-bonn.de/en/marvin/workspaces)
-will be created with the name `reproin` and expiry time `7` days, and the
+will be created with the name `reproin-bids` and expiry time `7` days, and the
 directory will be uploaded to that workspace.
 
 ```console
-$ ./upload-input-bids.sh ../fMRI/example/bids_datasets/Patterson/Coben reproin 7
+$ ./upload-input-bids.sh ~/dicom-example/bids_datasets/Patterson/Coben reproin-bids 7
 ```
 
 A new workspace is now created and contains the uploaded files:
 
 ```console
 $ ssh marvin ws_list
-id: reproin
-     workspace directory  : /lustre/scratch/data/sebelin2_hpc-reproin
+id: reproin-bids
+     workspace directory  : /lustre/scratch/data/sebelin2_hpc-reproin-bids
      remaining time       : 6 days 23 hours
      creation time        : Tue Jun 17 14:12:11 2025
      expiration date      : Tue Jun 24 14:12:11 2025
      filesystem name      : scratch
      available extensions : 3
 
-$ ssh marvin ls /lustre/scratch/data/sebelin2_hpc-reproin/
+$ ssh marvin ls /lustre/scratch/data/sebelin2_hpc-reproin-bids/
 CHANGES
 dataset_description.json
 participants.json

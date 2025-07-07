@@ -53,6 +53,8 @@ $ conda install -y -c conda-forge datalad
 $ conda install -y -c conda-forge bids-validator
 $ conda install -y -c conda-forge deno
 $ conda install -y -c conda-forge tree
+$ conda install -y -c conda-forge jq
+$ conda install -y -c conda-forge fzf
 $ pip install heudiconv
 $ pip install fmriprep-docker
 ```
@@ -72,12 +74,12 @@ Clone the
 [tools](https://github.com/CENsBonn/tools)
 repository:
 ```console
-$ cd $HOME
+$ cd ~
 $ git clone https://github.com/CENsBonn/tools
 ```
 Alternatively:
 ```console
-$ cd $HOME
+$ cd ~
 $ git clone git@github.com:CENsBonn/tools
 ```
 

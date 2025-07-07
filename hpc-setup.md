@@ -37,7 +37,7 @@ and connect to the cluster via SSH.
 Let us assume that you generated your keypair like so:
 
 ```console
-$ ssh-keygen -t ed25519 -N "" -f ~/.ssh/marvin
+$ ssh-keygen -t ed25519 -N "" -C "sebelin2@uni-bonn.de" -f ~/.ssh/marvin
 ```
 
 Make sure that you are able to log in to the HPC cluster. Replace
@@ -45,6 +45,11 @@ Make sure that you are able to log in to the HPC cluster. Replace
 
 ```console
 $ ssh -i ~/.ssh/marvin sebelin2_hpc@marvin.hpc.uni-bonn.de
+
+The authenticity of host 'marvin.hpc.uni-bonn.de (131.220.53.92)' can't be established.
+ED25519 key fingerprint is SHA256:3rhTMOUpIcLo3tuKTeDsv46m836QlG4G9xu2ojzC8WM.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 
         Welcome to the marvin-cluster!
         For more information check our wiki: https://wiki.hpc.uni-bonn.de
@@ -62,7 +67,7 @@ repository and add an entry to your local `~/.ssh/config` by running the
 command below:
 
 ```console
-$ cd tools/
+$ cd ~/tools/
 $ ./configure-remote-connection.sh sebelin2_hpc ~/.ssh/marvin
 ```
 
@@ -85,7 +90,7 @@ See {ref}`id-obtain-a-freesurfer-license` for how to obtain a FreeSurfer license
 Upload the license to the HPC cluster:
 
 ```console
-$ ./upload-license.sh ./path/to/license.txt
+$ ./upload-license.sh ~/Downloads/license.txt
 ```
 
 Build the fMRIPrep Singularity image on the HPC cluster:

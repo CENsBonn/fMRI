@@ -87,11 +87,13 @@ on the nipype registration step:
 Once the command finishes, you should have a directory structure as follows:
 
 ```console
-$ tree -d -L1
+$ tree -L1
 .
 ├── bids_datasets
 ├── fmriprep_output
-└── fmriprep_tmp
+├── fmriprep_tmp
+├── license.txt
+└── reproin_dicom.zip
 ```
 
 The `fmriprep_tmp` directory can be safely removed.

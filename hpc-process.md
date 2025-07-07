@@ -29,7 +29,7 @@ The script runs quickly and simply counts the number of files in your dataset.
 Run the job like so:
 
 ```console
-$ cd tools/
+$ cd ~/tools/
 $ ./run-job.sh reproin-dicom ./job/example -- extra_argument another_argument
 
 Created job directory: jobs/job_20250618_113525_zodD
@@ -59,7 +59,7 @@ the dataset you uploaded earlier.
 * The extra arguments (`extra_argument`, `another_argument`) are optional and
 will be passed to the SLURM script.
 
-In the example above, the results of the job will be stored in the directory
+Based on the output in the example above, the results of the job will be stored in the directory
 `~/jobs/job_20250618_113525_zodD` on the remote.
 To list the files in this directory, you can do:
 
@@ -85,16 +85,11 @@ work
 dataset you uploaded earlier:
 
 ```console
+$ ssh marvin ls -lah jobs/latest/input
+lrwxrwxrwx 1 sebelin2_hpc hpcusers 47 Jul  7 14:54 jobs/latest/input -> /lustre/scratch/data/sebelin2_hpc-reproin-dicom
+
 $ ssh marvin ls jobs/latest/input
-CHANGES
-dataset_description.json
-participants.json
-participants.tsv
-README
-scans.json
-sourcedata
-sub-001
-task-rest_bold.json
+REPROIN
 ```
 
 `slurm.out` contains the printed messages of the job.
@@ -116,6 +111,9 @@ write an example file (`generated_by_sample_job.txt`)
 to the output directory. To inspect it:
 
 ```console
+$ ssh marvin ls -lah jobs/latest/output
+lrwxrwxrwx 1 sebelin2_hpc hpcusers 76 Jul  7 14:54 jobs/latest/output -> /lustre/scratch/data/sebelin2_hpc-reproin-dicom_job_20250618_113525_zodD_out
+
 $ ssh marvin ls jobs/latest/output
 generated_by_sample_job.txt
 
@@ -160,6 +158,8 @@ $ ./list-jobs.sh
                   JobName               Start    Elapsed      State
 ------------------------- ------------------- ---------- ----------
  job_20250618_132739_zodD 2025-06-18T13:27:42   00:00:10  COMPLETED
+ job_20250701_093101_EIJC 2025-07-01T09:31:08   10:00:22    TIMEOUT
+ job_20250702_091602_mykW 2025-07-02T09:16:07   12:03:02     FAILED
 ```
 
 ## List workspaces
@@ -276,7 +276,7 @@ to `reproin-bids`. The renamed workspace should have an expiry time of `7` days.
 Run the following command:
 
 ```console
-$ ./rename-ws.sh reproin_job_20250625_150428_ilac_out reproin-bids 7
+$ ./rename-ws.sh reproin-dicom_job_20250625_150428_ilac_out reproin-bids 7
 ```
 
 ## Validate BIDS dataset
@@ -292,7 +292,7 @@ BIDS dataset.
 
 ## Run an fMRIPrep job
 
-To run `fMRIPrep` on the uploaded `reproin`, you can use the following command:
+To run `fMRIPrep` on the uploaded `reproin-bids` workspace, you can use the following command:
 
 ```console
 $ ./run-job.sh reproin-bids ./job/reproin-fmriprep
