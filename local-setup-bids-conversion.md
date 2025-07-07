@@ -18,16 +18,33 @@ In this guide, we will make use of an example DICOM dataset named `reproin`
 and convert it to BIDS format.
 If your dataset is already in BIDS format, you may skip this page.
 
+Create a directory and enter it:
+
+```console
+$ cd $HOME
+$ mkdir -p dicom-example
+$ cd dicom-example
+```
+
 Download the dataset by running:
 
 ```console
 $ wget https://datasets.datalad.org/repronim/heudiconv-reproin-example/reproin_dicom.zip
 ```
 
+```console
+$ tree
+.
+└── reproin_dicom.zip
+
+1 directory, 1 file
+```
+
 Convert it to BIDS with
 [HeuDiConv](https://heudiconv.readthedocs.io/en/latest/):
 
 ```console
+$ conda activate cens
 $ heudiconv --files reproin_dicom.zip -f reproin --bids -o bids_datasets
 ```
 

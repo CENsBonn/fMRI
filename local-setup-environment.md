@@ -31,34 +31,33 @@ $ conda info
 ```
 
 If you get a `command not found` error,
-[install Conda](https://conda-forge.org/download/)
-and try again.
+install Miniconda and try again.
+If you are using WSL, you can do so by running:
+
+```console
+$ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+$ bash miniconda.sh -b -p "$HOME/miniconda"
+$ rm -f miniconda.sh
+$ eval "$($HOME/miniconda/bin/conda shell.bash hook)"
+$ conda init
+```
+Then restart the terminal.
 
 Next, create a environment and install the required packages:
 
 ```console
-$ conda create -n cens
+$ conda create -y -n cens
 $ conda activate cens
-$ conda install -c conda-forge dcm2niix
+$ conda install -y -c conda-forge dcm2niix
 $ conda install -y -c conda-forge datalad
 $ conda install -y -c conda-forge bids-validator
 $ conda install -y -c conda-forge deno
+$ conda install -y -c conda-forge tree
 $ pip install heudiconv
 $ pip install fmriprep-docker
 ```
 
-You should get output similar to the following:
-
-```console
-$ conda env list
-
-# conda environments:
-#
-base                   /home/sebelino/miniforge3
-cens                 * /home/sebelino/miniforge3/envs/cens
-```
-
-Importantly, make sure you have activated your Conda environment:
+Before proceeding, make sure you have activated your Conda environment:
 
 ```console
 $ conda activate cens
@@ -73,12 +72,21 @@ Clone the
 [tools](https://github.com/CENsBonn/tools)
 repository:
 ```console
+$ cd $HOME
 $ git clone https://github.com/CENsBonn/tools
 ```
 Alternatively:
 ```console
+$ cd $HOME
 $ git clone git@github.com:CENsBonn/tools
 ```
+
+## Install Docker
+
+If you are planning to run fMRIPrep locally, you should install
+[Docker](https://docs.docker.com/get-started/get-docker/). If you are using
+WSL, download Docker Desktop for Windows and activate the WSL integration in
+the Docker settings. You may need to restart your WSL terminal afterwards.
 
 ## Next steps
 

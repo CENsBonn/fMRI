@@ -15,7 +15,8 @@ kernelspec:
 # fMRIPrep
 
 At this point, it is assumed that you have a directory containing a BIDS
-dataset in the directory `bids_datasets/Patterson/Coben/`. This section will
+dataset in the directory `~/dicom-example/bids_datasets/Patterson/Coben`.
+This section will
 explain how to run `fMRIPrep` on the dataset on your local machine.
 If you would like to do this on the HPC cluster instead, please
 refer to the {doc}`HPC guide<hpc-overview>`.
@@ -29,25 +30,40 @@ Fill out the form on the following page to obtain a
 
 https://surfer.nmr.mgh.harvard.edu/registration.html
 
-Some of the fields can be left blank. Make sure to set:
+Some of the fields can be left blank. You should at least set:
 
-* **E-mail address**: (Your e-mail address)
+* **Title**: (Your title, e.g. Dr., MSc.)
+* **First**: (Your first name)
+* **Last**: (Your last name)
+* **Name of your academic/research institution**: Bonn
 * **Type of institution which will use this software**: `Non-profit education/research`
+* **E-mail address**: (Your e-mail address)
 * **Operating System/Platform**: `Linux/Intel`
 * **Number of Users**: `1`
 
 After submitting the form, you will receive an e-mail with `license.txt` attached.
 
-Download the license file and copy it to the current working directory:
+Download the license file and put it in the current working directory:
+
+```console
+$ cd ~/dicom-example/
+$ cp ~/Downloads/license.txt .
+```
+
+It should contain something like this:
 
 ```
-$ cp ~/Downloads/license.txt .
+$ cat license.txt
+your@email.com
+77777
+ *XX81XxXXx/xx
+ XXXXx16xx7x.X
+ XXX+xXXXx86XxXxxxxXXXX==
 ```
 
 ## Run fMRIPrep
 
-Ensure you have installed [Docker](https://docs.docker.com/get-started/get-docker/),
-then run `fMRIPrep` on the dataset:
+Then run `fMRIPrep` on the dataset:
 
 ```console
 $ fmriprep-docker bids_datasets/Patterson/Coben fmriprep_output participant \
@@ -59,8 +75,9 @@ $ fmriprep-docker bids_datasets/Patterson/Coben fmriprep_output participant \
     --work-dir fmriprep_tmp
 ```
 
-The command takes approximately 30 minutes to finish. The majority of the time
-will likely be spent on the nipype registration step:
+The command takes approximately 30 minutes to finish, not including the time it
+takes to pull the Docker image. The majority of the time will likely be spent
+on the nipype registration step:
 
 ```
 250610-08:25:38,253 nipype.workflow INFO:
