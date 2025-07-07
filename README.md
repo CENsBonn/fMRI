@@ -29,9 +29,9 @@ Create an environment, activate it, and install the required packages:
 conda create -y -n jbook
 conda activate jbook
 conda install -y -c conda-forge python
+conda install -y -c conda-forge make
 cd fMRI/
 pip install -r requirements.txt 
-sudo apt install make
 ```
 
 To run the Jupyter Book locally, run:
