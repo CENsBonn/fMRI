@@ -1,4 +1,4 @@
-# fmri
+# fMRI
 
 ## Local development
 
