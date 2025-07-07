@@ -63,7 +63,7 @@ $ ./list-ws.sh
 ```
 
 Now that the DICOM dataset is uploaded, the next step is to
-[convert it](#convert-dicom-to-bids)
+{ref}`convert it <id-convert-dicom-to-bids>`
 to BIDS format.
 
 (id-upload-bids-dataset)=

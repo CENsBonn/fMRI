@@ -203,6 +203,7 @@ Alternatively, you can specify the name of the workspace as an argument:
 $ ./release-ws.sh reproin-dicom_job_20250625_120537_yhW3_work
 ```
 
+(id-convert-dicom-to-bids)=
 ## Convert DICOM to BIDS
 
 In this section we assume that
@@ -210,7 +211,7 @@ you have
 uploaded a DICOM
 dataset to the `reproin-dicom` workspace on the HPC cluster
 according to the
-[earlier section](hpc-upload).
+{ref}`earlier section <id-upload-dicom-dataset>`.
 If your use case is different, feel free to skip this section.
 
 The next step is
