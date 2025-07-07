@@ -37,6 +37,7 @@ sudo apt install make
 To run the Jupyter Book locally, run:
 
 ```bash
+conda activate jbook
 make serve
 
 [I 250707 10:21:03 server:331] Serving on http://localhost:8008
