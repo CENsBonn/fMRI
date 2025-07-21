@@ -24,4 +24,5 @@ parts:
       - file: hpc-upload
       - file: hpc-process
       - file: hpc-download
+    - file: analysis
     - file: code
