@@ -24,5 +24,8 @@ parts:
       - file: hpc-upload
       - file: hpc-process
       - file: hpc-download
-    - file: analysis
+    - file: analysis-overview
+      sections:
+      - file: analysis-data
+      - file: analysis-univariate
     - file: code
