@@ -32,7 +32,6 @@ this, we must 1) design a statistical model of the BOLD signal and 2) test the
 null hypothesis that the average signal intensity does not significantly change
 during the listening phase under the assumptions of the model.
 
-
 ## Dummy variable regression
 
 We will start by considering a simple linear dummy variable regression model.
@@ -68,17 +67,17 @@ from the data.
 Let $\beta_0^v$ be the regression intercept.
 We do not know it, but we can estimate it from the data.
 
-Finally, let $\varepsilon^v \sim \mathcal{N}(0,\sigma^2)$ be a random variable capturing random noise in the model.
+Finally, let $\varepsilon^v(t) \sim \mathcal{N}(0,\sigma^2)$ be a random variable capturing random noise in the model at time point $t$.
 We do not know the fixed variance $\sigma^2$, but we can estimate it from the data.
 
 We can now make the following assumption: there is a linear relationship
 between the signal intensity and the listening variable. The relationship
 can be modeled as follows:
 
-$$ Y^v(t) = \beta_0^v + \beta_{\text{listen}}^v x_{\text{listen}}(t) + \varepsilon^v $$
+$$ Y^v(t) = \beta_0^v + \beta_{\text{listen}}^v x_{\text{listen}}(t) + \varepsilon^v(t) $$
 
 Note that the signal does not depend on $t$, assuming we know the value of the
-dummy variable $x_{\text{listen}}$. We
+dummy variable $x_{\text{listen}}$ and the noise term. We
 can therefore express the relationship simply as:
 
 $$ Y^v = \beta_0^v + \beta_{\text{listen}}^v x_{\text{listen}} + \varepsilon^v $$
@@ -92,8 +91,8 @@ hypotheses can be formally expressed as follows:
 
 $$
 \begin{align*}
-    H_0: \beta_{\text{listen}} = 0 \\
-    H_a: \beta_{\text{listen}} \neq 0
+    H_0: \beta_{\text{listen}}^v = 0 \\
+    H_a: \beta_{\text{listen}}^v \neq 0
 \end{align*}
 $$
 
@@ -280,7 +279,461 @@ p-value:                 0.042348
 Reject H0: beta_listening ≠ 0 (significant)
 ```
 
-The p-value is slightly below $0.05$, incidating that the
-difference is barely significant, albeit under the weakest significance level.
+The p-value is slightly below $0.05$, indicating that we reject the null
+hypothesis at the 5 % level.
+Does this prove that this voxel is activated during the listening phase?
+Or is the low p-value a result of model misspecification?
 
+## General Linear Model
+
+The dummy variable regression model is relatively simple, but makes a number of
+assumptions which may not accurately reflect reality:
+
+* The errors $\varepsilon_0, \ldots, \varepsilon_{83}$ are independent and
+homoscedastic (i.e. they have equal variance).
+However, in fMRI analysis, it is common to assume that they are
+[autocorrelated](https://arxiv.org/pdf/0906.3662).
+* The BOLD signal intensity changes exactly at the same time as the stimulus
+toggles on or off. In reality, the BOLD signal is delayed and dispersed over
+time in accordance with the [hemodynamic response function (HRF)](https://andysbrainbook.readthedocs.io/en/latest/fMRI_Short_Course/Statistics/03_Stats_HRF_Overview.html).
+* The model does not account for fMRI [drift](https://pubmed.ncbi.nlm.nih.gov/10329292/).
+* Each voxel is analyzed separately. The time series data for voxel A is not used
+to estimate the model coefficients for voxel B.
+This can be addressed by multivariate analysis.
+
+We can remedy some of these limitations by using a more general statistical
+model based on AR(1) noise autocorrelation, the hemodynamic response function
+(HRF), and drift. This can be easily achieved using `FirstLevelModel` from the
+Nilearn library.
+Run `python test_flm_voxel.py 32 32 32` on the following script:
+
+```python
+import sys
+import numpy as np
+import pandas as pd
+from nilearn import image
+from nilearn.datasets import fetch_spm_auditory
+from nilearn.glm.first_level import FirstLevelModel
+from nilearn.glm.contrasts import compute_contrast
+from nilearn.image import load_img
+from scipy.stats import norm
+
+subject_data = fetch_spm_auditory()
+img = load_img(subject_data.func)
+n_scans = img.shape[-1]
+
+if len(sys.argv) != 4:
+    print(f"Usage: python {sys.argv[0]} <x> <y> <z>")
+    sys.exit(1)
+
+x, y, z = [int(e) for e in sys.argv[1:]]
+
+events = pd.read_table(subject_data.events)
+
+glm = FirstLevelModel(
+    t_r=7,
+    noise_model="ar1",
+    standardize=False,
+    hrf_model="spm",
+    drift_model="cosine",
+    high_pass=0.01,
+)
+glm.fit(img, events)
+
+eff_map = glm.compute_contrast("listening", output_type="effect_size")
+z_map = glm.compute_contrast("listening", output_type="z_score")
+
+beta_1 = eff_map.get_fdata()[x, y, z]
+z_score = z_map.get_fdata()[x, y, z]
+
+p_value = 2 * (1 - norm.cdf(abs(z_score)))
+
+print(f"Beta (listening): {beta_1:.4f}")
+print(f"Z-score:          {z_score:.4f}")
+print(f"P-value:          {p_value:.6f}")
+```
+
+Output:
+
+```
+Beta (listening): -0.7337
+Z-score:          -1.8257
+P-value:          0.067897
+```
+
+This time, the p-value is $0.068$, indicating that we failed to reject the null
+hypothesis.
+
+In the dummy regression model, our design matrix $X$ consisted of only two
+columns: one for the intercept and one for the dummy variable
+$x_{\text{listen}}$. In the Nilearn GLM, the matrix has been extended with
+additional columns for the purpose of modeling drift:
+
+```python
+>>> glm.design_matrices_[0]
+       listening   drift_1   drift_2   drift_3   drift_4   drift_5   drift_6   drift_7   drift_8   drift_9  drift_10  drift_11  constant
+0.0     0.000000  0.154276  0.154195  0.154061  0.153872  0.153629  0.153333  0.152983  0.152580  0.152123  0.151613  0.151050       1.0
+7.0     0.000000  0.154061  0.153333  0.152123  0.150435  0.148273  0.145644  0.142558  0.139023  0.135050  0.130652  0.125844       1.0
+14.0    0.000000  0.153629  0.151613  0.148273  0.143637  0.137746  0.130652  0.122417  0.113112  0.102820  0.091628  0.079637       1.0
+21.0    0.000000  0.152983  0.149046  0.142558  0.133631  0.122417  0.109109  0.093934  0.077152  0.059049  0.039937  0.020141       1.0
+28.0    0.000000  0.152123  0.145644  0.135050  0.120639  0.102820  0.082094  0.059049  0.034336  0.008652 -0.017276 -0.042717       1.0
+...          ...       ...       ...       ...       ...       ...       ...       ...       ...       ...       ...       ...       ...
+553.0   0.809244 -0.152123  0.145644 -0.135050  0.120639 -0.102820  0.082094 -0.059049  0.034336 -0.008652 -0.017276  0.042717       1.0
+560.0   1.129980 -0.152983  0.149046 -0.142558  0.133631 -0.122417  0.109109 -0.093934  0.077152 -0.059049  0.039937 -0.020141       1.0
+567.0   1.023340 -0.153629  0.151613 -0.148273  0.143637 -0.137746  0.130652 -0.122417  0.113112 -0.102820  0.091628 -0.079637       1.0
+574.0   1.001027 -0.154061  0.153333 -0.152123  0.150435 -0.148273  0.145644 -0.142558  0.139023 -0.135050  0.130652 -0.125844       1.0
+581.0   1.000000 -0.154276  0.154195 -0.154061  0.153872 -0.153629  0.153333 -0.152983  0.152580 -0.152123  0.151613 -0.151050       1.0
+
+[84 rows x 13 columns]
+```
+
+In addition, the values in the `listening` column are not perfectly binary, but
+have been convolved to account for the HRF.
+
+Rather than testing each voxel one by one, let us test all voxels at once and
+use `plot_stat_map` to plot the most statistically significant ones:
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from nilearn import image
+from nilearn.datasets import fetch_spm_auditory
+from nilearn.glm.first_level import FirstLevelModel
+from nilearn.glm.contrasts import compute_contrast
+from nilearn.image import load_img
+from nilearn.plotting import plot_stat_map, show
+from nilearn.image import mean_img
+from nilearn.glm import threshold_stats_img
+from scipy.stats import norm
+
+subject_data = fetch_spm_auditory()
+img = load_img(subject_data.func)
+
+events = pd.read_table(subject_data.events)
+
+glm = FirstLevelModel(
+    t_r=7,
+    noise_model="ar1",
+    standardize=False,
+    hrf_model="spm",
+    drift_model="cosine",
+    high_pass=0.01,
+)
+glm.fit(img, events)
+
+z_map = glm.compute_contrast("listening", output_type="z_score")
+
+fmri_img = subject_data.func
+mean_image = mean_img(subject_data.func[0], copy_header=True)
+
+plotting_config = {
+    "bg_img": mean_image,
+    "display_mode": "z",
+    "cut_coords": 3,
+    "black_bg": True,
+    "cmap": "inferno",
+}
+
+fig = plt.figure(figsize=(10, 4))
+
+clean_map, threshold = threshold_stats_img(
+    z_map,
+    alpha=0.001,
+    height_control="fpr",
+    two_sided=False,
+)
+
+plot_stat_map(
+    clean_map,
+    threshold=threshold,
+    title=f"listening > rest (Uncorrected p<0.001; threshold: {threshold:.3f}",
+    figure=fig,
+    **plotting_config,
+)
+show()
+```
+
+```{figure} ./images/zmap.png
+:name: zmap
+:width: 100%
+
+The z-map of the `listening > rest` contrast. Only voxels yielding a p-value below 0.001 (z-score $\approx 3.29$) are shown.
+```
+
+Figure {numref}`zmap` suggests that there are at least two clusters of voxels
+where the z-scores are especially high. It is possible that these match the
+regions of the brain where auditory processing is done. The remaining voxels
+might be false positives. It is possible to discard isolated highlighted voxels
+using `cluster_threshold`, as has been done in {numref}`zmap-animation`.
+
+```{figure} ./images/zmap-animation.gif
+:name: zmap-animation
+:width: 50%
+
+Animation of the z-map for all transverse slices that contain at least one voxel above the z-score threshold.
+```
+
+Lastly, we can use
+[AtlasReader](https://github.com/miykael/atlasreader)
+to label the regions of the z-map:
+
+```python
+#!/usr/bin/env python
+
+import numpy as np
+import pandas as pd
+from nilearn.datasets import fetch_spm_auditory
+from nilearn.glm.first_level import FirstLevelModel
+from nilearn.glm import threshold_stats_img
+import tempfile
+import os
+import warnings
+warnings.filterwarnings('ignore')
+
+import atlasreader
+
+# Run GLM analysis
+subject_data = fetch_spm_auditory()
+events = pd.read_table(subject_data.events)
+
+glm = FirstLevelModel(t_r=7, noise_model="ar1", standardize=False,
+                     hrf_model="spm", drift_model="cosine", high_pass=0.01)
+glm.fit(subject_data.func, events)
+
+z_map = glm.compute_contrast("listening", output_type="z_score")
+thresholded_map, threshold = threshold_stats_img(
+    z_map, alpha=0.05, height_control="fdr", cluster_threshold=10, two_sided=False
+)
+
+# Save statistical map for AtlasReader
+temp_file = tempfile.NamedTemporaryFile(suffix='.nii.gz', delete=False)
+thresholded_map.to_filename(temp_file.name)
+
+try:
+    # Create output directory
+    output_dir = tempfile.mkdtemp()
+    
+    # Run AtlasReader
+    result = atlasreader.create_output(
+        filename=temp_file.name,
+        cluster_extent=10,
+        atlas='default',
+        voxel_thresh=threshold,
+        direction='pos',
+        prob_thresh=5,
+        outdir=output_dir
+    )
+    
+    # Read results
+    csv_files = [f for f in os.listdir(output_dir) if f.endswith('.csv')]
+    if csv_files:
+        results_path = os.path.join(output_dir, csv_files[0])
+        atlas_results = pd.read_csv(results_path)
+        
+        # Display results
+        for idx, cluster in atlas_results.iterrows():
+            print(f"Cluster {idx + 1}:")
+            print(f"  Peak coordinates (MNI): ({cluster.get('peak_x', 'N/A')}, {cluster.get('peak_y', 'N/A')}, {cluster.get('peak_z', 'N/A')})")
+            print(f"  Cluster size: {cluster.get('volume_mm', cluster.get('cluster_size_mm3', 'N/A'))} mm³")
+            
+            # Show atlas labels
+            atlas_columns = [col for col in atlas_results.columns if col in ['aal', 'harvard_oxford', 'desikan_killiany']]
+            
+            if atlas_columns:
+                print(f"  Atlas labels:")
+                for col in atlas_columns:
+                    label = cluster.get(col, 'N/A')
+                    if pd.notna(label) and label != '' and label != 'N/A':
+                        print(f"    {col}: {label}")
+            print()
+
+finally:
+    # Cleanup
+    try:
+        os.unlink(temp_file.name)
+        import shutil
+        if 'output_dir' in locals():
+            shutil.rmtree(output_dir)
+    except:
+        pass
+```
+
+Output:
+
+```
+Cluster 1:
+  Peak coordinates (MNI): (-60.0, -6.0, 42.0)
+  Cluster size: 3888.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 20.0% Left_Precentral_Gyrus; 11.0% Left_Postcentral_Gyrus
+
+Cluster 2:
+  Peak coordinates (MNI): (60.0, 0.0, 36.0)
+  Cluster size: 1620.0 mm³
+  Atlas labels:
+    aal: Postcentral_R
+    desikan_killiany: ctx-rh-precentral
+    harvard_oxford: 77.0% Right_Precentral_Gyrus; 5.0% Right_Postcentral_Gyrus
+
+Cluster 3:
+  Peak coordinates (MNI): (36.0, -3.0, 15.0)
+  Cluster size: 1161.0 mm³
+  Atlas labels:
+    aal: Insula_R
+    desikan_killiany: ctx-rh-insula
+    harvard_oxford: 57.0% Right_Insular_Cortex; 13.0% Right_Central_Opercular_Cortex
+
+Cluster 4:
+  Peak coordinates (MNI): (45.0, -18.0, 57.0)
+  Cluster size: 972.0 mm³
+  Atlas labels:
+    aal: Precentral_R
+    desikan_killiany: Unknown
+    harvard_oxford: 39.0% Right_Postcentral_Gyrus; 16.0% Right_Precentral_Gyrus
+
+Cluster 5:
+  Peak coordinates (MNI): (-15.0, -60.0, 66.0)
+  Cluster size: 864.0 mm³
+  Atlas labels:
+    aal: Precuneus_L
+    desikan_killiany: Left-Cerebral-White-Matter
+    harvard_oxford: 50.0% Left_Lateral_Occipital_Cortex_superior_division; 24.0% Left_Superior_Parietal_Lobule
+
+Cluster 6:
+  Peak coordinates (MNI): (66.0, 15.0, 27.0)
+  Cluster size: 837.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 7:
+  Peak coordinates (MNI): (51.0, 30.0, 27.0)
+  Cluster size: 675.0 mm³
+  Atlas labels:
+    aal: Frontal_Inf_Tri_R
+    desikan_killiany: Unknown
+    harvard_oxford: 65.0% Right_Middle_Frontal_Gyrus; 6.0% Right_Inferior_Frontal_Gyrus_pars_triangularis
+
+Cluster 8:
+  Peak coordinates (MNI): (-12.0, -69.0, 51.0)
+  Cluster size: 540.0 mm³
+  Atlas labels:
+    aal: Precuneus_L
+    desikan_killiany: ctx-lh-superiorparietal
+    harvard_oxford: 30.0% Left_Lateral_Occipital_Cortex_superior_division; 20.0% Left_Precuneous_Cortex
+
+Cluster 9:
+  Peak coordinates (MNI): (-12.0, -15.0, 93.0)
+  Cluster size: 513.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 10:
+  Peak coordinates (MNI): (27.0, -51.0, 75.0)
+  Cluster size: 432.0 mm³
+  Atlas labels:
+    aal: Parietal_Sup_R
+    desikan_killiany: Unknown
+    harvard_oxford: 7.0% Right_Superior_Parietal_Lobule
+
+Cluster 11:
+  Peak coordinates (MNI): (60.0, 21.0, 75.0)
+  Cluster size: 432.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 12:
+  Peak coordinates (MNI): (-3.0, -27.0, 90.0)
+  Cluster size: 378.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 13:
+  Peak coordinates (MNI): (-24.0, -24.0, 90.0)
+  Cluster size: 378.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 14:
+  Peak coordinates (MNI): (60.0, -18.0, 27.0)
+  Cluster size: 378.0 mm³
+  Atlas labels:
+    aal: SupraMarginal_R
+    desikan_killiany: ctx-rh-supramarginal
+    harvard_oxford: 46.0% Right_Postcentral_Gyrus; 24.0% Right_Supramarginal_Gyrus_anterior_division
+
+Cluster 15:
+  Peak coordinates (MNI): (45.0, -18.0, 78.0)
+  Cluster size: 378.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 16:
+  Peak coordinates (MNI): (63.0, -6.0, 27.0)
+  Cluster size: 378.0 mm³
+  Atlas labels:
+    aal: Postcentral_R
+    desikan_killiany: Right-Cerebral-White-Matter
+    harvard_oxford: 51.0% Right_Postcentral_Gyrus; 22.0% Right_Precentral_Gyrus
+
+Cluster 17:
+  Peak coordinates (MNI): (-27.0, -3.0, 15.0)
+  Cluster size: 351.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Left-Cerebral-White-Matter
+    harvard_oxford: 30.0% Left_Putamen
+
+Cluster 18:
+  Peak coordinates (MNI): (21.0, 18.0, 93.0)
+  Cluster size: 351.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 19:
+  Peak coordinates (MNI): (21.0, -72.0, 51.0)
+  Cluster size: 324.0 mm³
+  Atlas labels:
+    aal: Parietal_Sup_R
+    desikan_killiany: Right-Cerebral-White-Matter
+    harvard_oxford: 59.0% Right_Lateral_Occipital_Cortex_superior_division
+
+Cluster 20:
+  Peak coordinates (MNI): (18.0, -18.0, 96.0)
+  Cluster size: 297.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+
+Cluster 21:
+  Peak coordinates (MNI): (9.0, -33.0, 90.0)
+  Cluster size: 297.0 mm³
+  Atlas labels:
+    aal: no_label
+    desikan_killiany: Unknown
+    harvard_oxford: 0% no_label
+```
+
+From the output above, it is not obvious that the highlighted voxels are part
+of the auditory cortex.
+It could be that the `cluster_threshold` is too high
+and the auditory regions of interest are too small, especially
+considering the coarse resolution of the data (3 mm voxels).
 
