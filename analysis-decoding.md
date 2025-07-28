@@ -35,6 +35,10 @@ We will consider a basic binary classification task based on the
 {doc}`SPM dataset<analysis-data>`:
 predicting whether the participant was listening to the auditory stimulus or at
 rest, using only the brain activity patterns.
+The following code uses the Nilearn `Decoder` class to train a Support Vector
+Classifier in order to predict the experimental condition from brain activity
+patterns. The prediction accuracy is calculated based on 5-fold
+cross-validation:
 
 ```python
 import numpy as np
@@ -95,6 +99,7 @@ print(f"P-value: {p_value:.6f}")
 ```
 
 Output:
+
 ```
 Decoding Results:
 Cross-validation accuracy: 0.810 ± 0.057
@@ -103,6 +108,16 @@ Chance level (balanced): 0.500
 T-statistic: 10.795
 P-value: 0.000418
 ```
+
+The output above shows that our model is able to predict the correct label
+(listening vs rest) with an 81% accuracy.
+This is significantly above the 50% chance level we would expect
+if the model was randomly guessing.
+The t-test confirms this is statistically
+significant (p < 0.001), indicating that brain activity patterns reliably
+distinguish between listening and rest conditions. The relatively small
+standard deviation (5.7%) suggests consistent performance across
+cross-validation folds.
 
 ## ROC curve
 
@@ -188,3 +203,9 @@ Cross-validated AUC: 0.785
 
 ROC curve for MVPA decoding showing the trade-off between true positive rate (sensitivity) and false positive rate (1-specificity). The AUC of 0.785 indicates good discriminative ability, substantially above the 0.5 chance level (diagonal dashed line). This demonstrates that the classifier can reliably distinguish between listening and rest states from brain activity patterns.
 ```
+
+The AUC of 0.785 indicates good discriminative performance, substantially above
+the 0.5 chance level. This means the classifier can distinguish between
+listening and rest states with high reliability, with the ROC curve in
+{numref}`decoding-roc-curve`
+showing strong separation from the diagonal chance line.
