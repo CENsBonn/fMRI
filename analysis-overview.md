@@ -15,3 +15,6 @@ kernelspec:
 # fMRI analysis
 
 In this guide, we will cover how to do fMRI analysis using the `nilearn` library.
+This guide is based on the
+[Intro to GLM Analysis](https://nilearn.github.io/stable/auto_examples/00_tutorials/plot_single_subject_single_run.html)
+tutorial by Nilearn.

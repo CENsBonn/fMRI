@@ -14,10 +14,8 @@ kernelspec:
 
 # Dissecting a dataset
 
-The following sections
-are based on the
-[Intro to GLM Analysis](https://nilearn.github.io/stable/auto_examples/00_tutorials/plot_single_subject_single_run.html)
-tutorial by Nilearn.
+We will start by studying each file in a fMRIPrep-processed dataset to
+understand the structure and contents.
 
 ## Setup
 
@@ -31,15 +29,15 @@ $ conda install -y -c conda-forge nilearn
 
 ## Research question
 
+For the purposes of this exercise, we will attempt to answer the following
+research question:
 What part of the brain is activated when a person is listening to the sound of spoken words?
 
 ## Dataset
 
-
 To address the research question,
 we will start by loading the SPM auditory dataset.
 This is a very simple dataset, making it suitable for beginners.
-
 Run:
 
 ```python
