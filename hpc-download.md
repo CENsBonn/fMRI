@@ -14,9 +14,7 @@ kernelspec:
 
 # Downloading data
 
-At this point, you should have processed your dataset
-in the HPC cluster as described in
-{doc}`hpc-upload`.
+At this point, you should have processed your dataset on the HPC cluster as described in {doc}`hpc-process`.
 The next step is to download the dataset for further analysis.
 
 ## Download the output

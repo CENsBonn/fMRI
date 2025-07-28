@@ -43,7 +43,7 @@ $ conda init
 ```
 Then restart the terminal.
 
-Next, create a environment and install the required packages:
+Next, create an environment and install the required packages:
 
 ```console
 $ conda create -y -n cens

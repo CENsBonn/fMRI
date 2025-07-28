@@ -29,8 +29,7 @@ $ conda install -y -c conda-forge nilearn
 
 ## Research question
 
-For the purposes of this exercise, we will attempt to answer the following
-research question:
+For the purposes of this exercise, we will attempt to answer the following research question:
 What part of the brain is activated when a person is listening to the sound of spoken words?
 
 ## Dataset
@@ -90,13 +89,12 @@ $ cat ~/nilearn_data/spm_auditory/MoAEpilot/task-auditory_bold.json
 `RepetitionTime` is the time between successive MRI scans.
 In essence, this means a full 3D snapshot of the entire brain was taken every 7 seconds.
 
-`TaskDescription` describes what the participant was doing while he/she was
-laying in the MRI scanner.
-The text tells us that experiment was designed in the following way:
+`TaskDescription` describes what the participant was doing while he/she was lying in the MRI scanner.
+The text tells us that the experiment was designed in the following way:
 
-1. Participant is asked to lay still in the MRI scanner.
+1. Participant is asked to lie still in the MRI scanner.
 1. Scan begins.
-1. Participant lays still in the scanner for $x$ seconds.
+1. Participant lies still in the scanner for $x$ seconds.
 1. A sound clip is played.
 1. Participant listens to the sound clip for $x$ seconds.
 1. The sound clip is muted.
