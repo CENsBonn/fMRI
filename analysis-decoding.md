@@ -12,7 +12,7 @@ kernelspec:
   name: python3
 ---
 
-# MVPA Decoding Analysis
+# Decoding
 
 In the previous section, we used
 {doc}`univariate analysis<analysis-univariate>`
