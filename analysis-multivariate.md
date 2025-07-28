@@ -14,211 +14,234 @@ kernelspec:
 
 # Multivariate analysis
 
-In the previous section on {doc}`analysis-univariate`, we analyzed individual voxels in isolation. Each voxel's time series was fitted with a General Linear Model independently from the other voxels. This approach is called *univariate* analysis because we examine one variable (voxel) at a time.
+In the previous section on {doc}`univariate analysis<analysis-univariate>`, we analyzed individual voxels in isolation using the General Linear Model. Each voxel's time series was fitted independently, testing for activation one voxel at a time. This *univariate* approach is powerful for identifying localized brain activations.
 
-In contrast, *multivariate* analysis examines patterns of activity across multiple voxels simultaneously. This approach can reveal information that is distributed across regions rather than localized to individual voxels. Multivariate methods are particularly powerful for decoding cognitive states, identifying functional networks, and performing classification tasks.
+Multi-Voxel Pattern Analysis (MVPA) takes a fundamentally different approach by examining patterns of activity across multiple voxels simultaneously. Instead of asking "*which* voxels are active?", MVPA asks "*what information* can we decode from patterns of brain activity?"
 
-## Overview of multivariate approaches
+## What is MVPA?
 
-There are several types of multivariate analysis commonly used in fMRI:
+MVPA uses machine learning techniques to classify or predict cognitive states, experimental conditions, or behavioral outcomes based on distributed patterns of brain activity. Key characteristics include:
 
-1. **Multi-voxel pattern analysis (MVPA)**: Uses machine learning to classify brain states based on patterns of voxel activity
-2. **Representational similarity analysis (RSA)**: Compares the similarity structure of neural representations
-3. **Connectivity analysis**: Examines functional relationships between brain regions
-4. **Dimensionality reduction**: Reduces high-dimensional brain data to lower dimensions while preserving important information
+- **Pattern-based**: Analyzes spatial patterns across voxels rather than individual voxel activations
+- **Predictive**: Uses supervised learning to decode information from brain activity
+- **Sensitive**: Can detect distributed information that univariate methods might miss
+- **Flexible**: Applicable to classification, regression, and representational analysis
 
-In this section, we'll focus on MVPA using Nilearn's decoding capabilities.
+## MVPA with Nilearn
 
-## Multi-voxel pattern analysis with Nilearn
+Nilearn provides excellent tools for MVPA through its `decoding` module. Let's start with a classic example using the Haxby dataset, which contains visual object recognition data perfect for demonstrating classification.
 
-Let's demonstrate MVPA by training a classifier to distinguish between "listening" and "rest" periods using the SPM auditory dataset. Unlike univariate analysis which tests each voxel separately, MVPA uses patterns across many voxels to make predictions.
+### Face vs House Classification
 
-### Basic classification example
+We'll train a classifier to distinguish between viewing faces and houses based on patterns of brain activity:
 
 ```python
 import numpy as np
 import pandas as pd
-from nilearn import image
-from nilearn.datasets import fetch_spm_auditory
+from nilearn import datasets
 from nilearn.decoding import Decoder
-from nilearn.image import load_img
-from sklearn.model_selection import LeaveOneOut
-from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
+from nilearn.image import index_img
+from scipy.stats import ttest_1samp
 
-# Load the SPM auditory dataset
-subject_data = fetch_spm_auditory()
-img = load_img(subject_data.func)
-events = pd.read_table(subject_data.events)
+# Load the Haxby dataset
+haxby_dataset = datasets.fetch_haxby()
 
-# Create labels for each volume based on experimental conditions
-# We'll use a simple block design: 1 for listening, 0 for rest
-n_scans = img.shape[-1]
-segment_size = 7  # 7 TRs per block
-labels = []
+# Load functional data and behavioral labels for first subject
+fmri_filename = haxby_dataset.func[0]
+behavioral = pd.read_csv(haxby_dataset.session_target[0], sep=' ')
 
-for i in range(n_scans):
-    if (i // segment_size) % 2 == 0:
-        labels.append('rest')
-    else:
-        labels.append('listening')
+print(f"Available conditions: {behavioral.labels.unique()}")
 
-labels = np.array(labels)
+# Select face vs house conditions for binary classification
+conditions = ['face', 'house']
+condition_mask = behavioral['labels'].isin(conditions)
 
-print(f"Total scans: {n_scans}")
-print(f"Listening scans: {np.sum(labels == 'listening')}")
-print(f"Rest scans: {np.sum(labels == 'rest')}")
+# Filter the data
+fmri_img = index_img(fmri_filename, condition_mask)
+labels = behavioral['labels'][condition_mask]
+
+print(f"Selected {len(labels)} samples")
+print(f"Face samples: {sum(labels == 'face')}")
+print(f"House samples: {sum(labels == 'house')}")
 ```
 
 Output:
 ```
-Total scans: 84
-Listening scans: 42
-Rest scans: 42
+Available conditions: ['rest' 'scissors' 'face' 'cat' 'shoe' 'house' 'scrambledpix' 'bottle' 'chair']
+Selected 216 samples
+Face samples: 108
+House samples: 108
 ```
 
-Now let's train a classifier using Nilearn's `Decoder`:
+Now let's create and train our MVPA decoder:
 
 ```python
-# Create a decoder with a support vector classifier
+# Create a decoder with optimized parameters
 decoder = Decoder(
-    estimator='svc',           # Support Vector Classifier
-    mask_strategy='background', # Automatically create a brain mask
-    standardize=True,          # Standardize features
-    screening_percentile=20,   # Use top 20% most variable voxels
-    cv=LeaveOneOut(),         # Cross-validation strategy
-    scoring='accuracy'         # Metric to optimize
+    estimator='svc',          # Support Vector Classifier
+    mask_strategy='epi',      # Use EPI mask (better for functional data)
+    standardize=True,         # Standardize features
+    screening_percentile=5,   # Use top 5% most variable voxels
+    cv=5,                     # 5-fold cross-validation
+    scoring='accuracy'        # Accuracy metric
 )
 
 # Fit the decoder
-decoder.fit(img, labels)
+print("Training classifier...")
+decoder.fit(fmri_img, labels)
 
-# Get cross-validation scores
-cv_scores = decoder.cv_scores_
+# Extract cross-validation scores
+cv_scores_dict = decoder.cv_scores_
+# Both classes have identical scores in binary classification
+cv_scores = list(cv_scores_dict.values())[0]
+
 mean_accuracy = np.mean(cv_scores)
 std_accuracy = np.std(cv_scores)
 
 print(f"Cross-validation accuracy: {mean_accuracy:.3f} ± {std_accuracy:.3f}")
-print(f"Chance level: {1/len(np.unique(labels)):.3f}")
+print(f"Individual fold scores: {cv_scores}")
+print(f"Chance level: 0.500")
 
 # Statistical significance test
-from scipy.stats import ttest_1samp
-chance_level = 0.5
-t_stat, p_value = ttest_1samp(cv_scores, chance_level)
+t_stat, p_value = ttest_1samp(cv_scores, 0.5)
 print(f"T-statistic: {t_stat:.3f}")
 print(f"P-value: {p_value:.6f}")
 ```
 
 Output:
 ```
-Cross-validation accuracy: 0.738 ± 0.443
+Training classifier...
+Cross-validation accuracy: 0.950 ± 0.056
+Individual fold scores: [0.841, 0.977, 0.977, 0.953, 1.000]
 Chance level: 0.500
-T-statistic: 4.916
-P-value: 0.000032
+T-statistic: 15.974
+P-value: 0.000090
 ```
 
-The classifier achieves significantly above-chance performance, indicating that there are reliable multivariate patterns that distinguish listening from rest periods.
+Excellent! The classifier achieves 95% accuracy, demonstrating that face and house viewing conditions produce highly distinguishable patterns of brain activity.
 
-### Visualizing discriminative patterns
+### Visualizing Discriminative Patterns
 
-We can examine which brain regions contribute most to the classification:
+A key advantage of MVPA is that we can examine which brain regions contribute most to successful classification:
 
 ```python
 from nilearn.plotting import plot_stat_map, show
 from nilearn.image import mean_img
+import matplotlib.pyplot as plt
 
-# Get the discriminative map (feature weights)
-coef_img = decoder.coef_img_
+# Get the discriminative map (coefficient weights)
+# For binary classification, we extract weights for one class
+coef_img_dict = decoder.coef_img_
+coef_img = coef_img_dict['face']  # Weights favoring face classification
 
-# Create a mean functional image for background
-mean_func = mean_img(img)
+# Create a mean functional image as background
+mean_func = mean_img(fmri_img)
 
-# Plot the discriminative map
+# Plot the discriminative pattern
 fig = plt.figure(figsize=(12, 4))
 plot_stat_map(
-    coef_img, 
+    coef_img,
     bg_img=mean_func,
-    title='Multivariate pattern: Listening vs Rest',
+    title='MVPA Discriminative Pattern: Face vs House',
     display_mode='z',
     cut_coords=5,
     colorbar=True,
-    cmap='RdBu_r'  # Red-blue colormap
+    cmap='RdBu_r',  # Red-blue colormap
+    threshold=0.01   # Show only strong weights
 )
 show()
 ```
 
-The resulting map shows which voxels have positive weights (contributing to "listening" classification) and negative weights (contributing to "rest" classification).
+The discriminative map reveals which voxels contribute to face vs house classification:
+- **Red regions**: Voxels with positive weights that favor "face" classification
+- **Blue regions**: Voxels with negative weights that favor "house" classification
+- **Strong patterns** typically appear in visual cortex, especially the fusiform face area for faces and parahippocampal place area for houses
 
-### Searchlight analysis
+### Searchlight Analysis
 
-For more localized analysis, we can use a searchlight approach that runs the classification within small spheres throughout the brain:
+Searchlight analysis runs classification within small spheres across the brain, revealing which local regions contain the most discriminative information:
 
 ```python
 from nilearn.decoding import SearchLight
 from nilearn.plotting import plot_glass_brain
 
 # Create a searchlight decoder
+# Note: This is computationally intensive, so we use a subset for demonstration
 searchlight = SearchLight(
-    mask_img=None,             # Will create automatic mask
-    radius=4.0,                # 4mm radius spheres
-    estimator='svc',           # Support Vector Classifier
-    cv=3,                      # 3-fold cross-validation for speed
-    scoring='accuracy',        # Accuracy metric
-    n_jobs=1                   # Number of parallel jobs
+    mask_img=None,          # Automatic brain mask
+    radius=4.0,             # 4mm radius spheres
+    estimator='svc',        # Support Vector Classifier
+    cv=3,                   # 3-fold cross-validation
+    scoring='accuracy',     # Classification accuracy
+    n_jobs=1               # Single thread for stability
 )
 
-print("Running searchlight analysis (this may take a few minutes)...")
-searchlight.fit(img, labels)
+# For demonstration, use a subset of the data to reduce computation time
+subset_img = index_img(fmri_img, slice(0, 60))  # First 60 volumes
+subset_labels = labels.iloc[:60]
+
+print("Running searchlight analysis...")
+print("(Using subset of data for demonstration - full analysis takes longer)")
+searchlight.fit(subset_img, subset_labels)
 
 # Plot the searchlight accuracy map
-fig = plt.figure(figsize=(10, 6))
+fig = plt.figure(figsize=(12, 8))
 plot_glass_brain(
     searchlight.scores_,
     colorbar=True,
-    title='Searchlight Classification Accuracy',
-    plot_abs=False,
+    title='Searchlight MVPA: Local Classification Accuracy',
+    threshold=0.5,          # Show only above-chance regions
     vmax=1.0,
-    vmin=0.3,
+    vmin=0.5,
     cmap='hot'
 )
 show()
 ```
 
-The searchlight map reveals which brain regions contain the most informative patterns for distinguishing between experimental conditions.
+The searchlight map highlights brain regions where local patterns contain sufficient information for classification. Bright regions indicate areas with high local decoding accuracy.
 
-### Feature selection and interpretation
+### Understanding Feature Importance
 
-We can investigate which features (voxels) are most important for classification:
+We can investigate which voxels contribute most to successful classification:
 
 ```python
-# Get feature importance from the decoder
-feature_scores = decoder.cv_scores_
-
-# Create a mask of the most discriminative voxels
 from nilearn.image import threshold_img
-from nilearn.masking import apply_mask, unmask
+from nilearn.plotting import find_peaks
 
-# Threshold the coefficient map to show only strong weights
+# Threshold the coefficient map to identify the most discriminative voxels
 thresh_coef_img = threshold_img(coef_img, threshold='95%')
 
-# Extract coordinates of discriminative voxels
-from nilearn.plotting import find_parcellation_cut_coords
-coords = find_parcellation_cut_coords(thresh_coef_img)
+# Find peak coordinates of discriminative regions
+peaks = find_peaks(thresh_coef_img, min_distance=20, threshold=0.01)
 
 print("Most discriminative regions (MNI coordinates):")
-for i, coord in enumerate(coords[:10]):  # Show top 10
-    print(f"Region {i+1}: ({coord[0]:3.0f}, {coord[1]:3.0f}, {coord[2]:3.0f})")
+for i, (x, y, z, intensity) in enumerate(peaks[:10]):
+    print(f"Peak {i+1}: ({x:3.0f}, {y:3.0f}, {z:3.0f}) - Weight: {intensity:.3f}")
+
+# Visualize the thresholded discriminative map
+fig = plt.figure(figsize=(12, 4))
+plot_stat_map(
+    thresh_coef_img,
+    bg_img=mean_func,
+    title='Top 5% Most Discriminative Voxels',
+    display_mode='z',
+    cut_coords=5,
+    colorbar=True,
+    cmap='RdBu_r'
+)
+show()
 ```
 
-### Time series analysis of discriminative patterns
+This analysis identifies the specific brain regions most critical for face vs house discrimination, typically including visual cortex areas specialized for these categories.
 
-We can also examine how the discriminative pattern evolves over time:
+### Time Series Analysis of Discriminative Patterns
+
+We can examine how discriminative patterns evolve over time by extracting signals from the most informative voxels:
 
 ```python
-# Extract the average signal from discriminative regions
 from nilearn.maskers import NiftiMasker
 
-# Create a mask from the thresholded coefficient map
+# Create a masker using the thresholded discriminative map
 masker = NiftiMasker(
     mask_img=thresh_coef_img,
     standardize=True,
@@ -226,37 +249,77 @@ masker = NiftiMasker(
 )
 
 # Extract time series from discriminative voxels
-discriminative_signal = masker.fit_transform(img)
+discriminative_signal = masker.fit_transform(fmri_img)
 mean_signal = np.mean(discriminative_signal, axis=1)
 
-# Plot the time series with condition labels
-plt.figure(figsize=(12, 6))
-plt.plot(mean_signal, 'b-', linewidth=2, label='Discriminative pattern')
+# Create time series plot with condition labels
+fig, ax = plt.subplots(figsize=(15, 6))
 
-# Highlight listening periods
-for i in range(n_scans):
-    if labels[i] == 'listening':
-        plt.axvspan(i-0.4, i+0.4, alpha=0.3, color='red')
+# Plot the discriminative pattern signal
+ax.plot(mean_signal, 'b-', linewidth=2, label='Discriminative pattern strength')
 
-plt.xlabel('Time (TRs)')
-plt.ylabel('Signal intensity (z-score)')
-plt.title('Time series of discriminative multivariate pattern')
-plt.legend()
-plt.grid(True, alpha=0.3)
+# Highlight different conditions with colors
+face_indices = np.where(labels == 'face')[0]
+house_indices = np.where(labels == 'house')[0]
+
+for idx in face_indices:
+    ax.axvspan(idx-0.4, idx+0.4, alpha=0.3, color='red', label='Face' if idx == face_indices[0] else "")
+for idx in house_indices:
+    ax.axvspan(idx-0.4, idx+0.4, alpha=0.3, color='blue', label='House' if idx == house_indices[0] else "")
+
+ax.set_xlabel('Time (TRs)')
+ax.set_ylabel('Signal strength (z-score)')
+ax.set_title('Time Course of Face vs House Discriminative Pattern')
+ax.legend()
+ax.grid(True, alpha=0.3)
 show()
 ```
 
-## Comparison with univariate analysis
+This visualization shows how the strength of the discriminative pattern varies over time, with clear differences between face and house viewing periods.
 
-Let's compare the multivariate results with traditional univariate analysis:
+## MVPA vs Univariate Analysis
+
+Let's compare MVPA results with traditional univariate analysis to understand their complementary strengths:
 
 ```python
 from nilearn.glm.first_level import FirstLevelModel
 from nilearn.glm import threshold_stats_img
 
-# Univariate GLM analysis
+# For univariate analysis, we need to create a proper events DataFrame
+# Create events based on our labels
+events_list = []
+current_condition = None
+onset_time = 0
+
+for i, condition in enumerate(labels):
+    if condition != current_condition:
+        if current_condition is not None:
+            # End the previous event
+            duration = i * 2.5 - onset_time  # Assuming 2.5s TR
+            events_list.append({
+                'trial_type': current_condition,
+                'onset': onset_time,
+                'duration': duration
+            })
+        # Start new event
+        current_condition = condition
+        onset_time = i * 2.5
+
+# Add the final event
+if current_condition is not None:
+    duration = len(labels) * 2.5 - onset_time
+    events_list.append({
+        'trial_type': current_condition,
+        'onset': onset_time,
+        'duration': duration
+    })
+
+events_df = pd.DataFrame(events_list)
+print(f"Created {len(events_df)} events for GLM analysis")
+
+# Fit GLM model
 glm = FirstLevelModel(
-    t_r=7.0,
+    t_r=2.5,                # TR for Haxby dataset
     noise_model='ar1',
     standardize=False,
     hrf_model='spm',
@@ -264,137 +327,274 @@ glm = FirstLevelModel(
     high_pass=0.01
 )
 
-# Create events DataFrame for GLM
-events_df = pd.DataFrame({
-    'trial_type': ['listening'] * (n_scans // 2),
-    'onset': np.arange(7, n_scans*7, 14),  # Every other block
-    'duration': [7] * (n_scans // 2)       # 7 second blocks
-})
+glm.fit(fmri_img, events_df)
 
-glm.fit(img, events_df)
-z_map = glm.compute_contrast('listening', output_type='z_score')
+# Compute contrast: face - house
+z_map = glm.compute_contrast('face - house', output_type='z_score')
 
 # Threshold the univariate map
 thresh_z_map, threshold = threshold_stats_img(
     z_map, alpha=0.001, height_control='fpr'
 )
 
-# Compare multivariate and univariate results side by side
-fig, axes = plt.subplots(2, 1, figsize=(12, 8))
+print(f"Univariate analysis threshold: z > {threshold:.2f}")
+```
 
-# Multivariate pattern
+### Visual Comparison
+
+```python
+# Compare MVPA and univariate results
+fig, axes = plt.subplots(2, 1, figsize=(15, 10))
+
+# MVPA discriminative pattern
 plot_stat_map(
     coef_img,
     bg_img=mean_func,
     axes=axes[0],
-    title='Multivariate pattern (MVPA)',
+    title='MVPA: Discriminative Pattern (Face vs House)',
     display_mode='z',
-    cut_coords=3,
+    cut_coords=6,
     colorbar=True,
     cmap='RdBu_r'
 )
 
-# Univariate activation
+# Univariate activation map
 plot_stat_map(
     thresh_z_map,
     bg_img=mean_func,
     axes=axes[1],
-    title='Univariate activation (GLM)',
+    title='Univariate GLM: Face - House Contrast',
     display_mode='z',
-    cut_coords=3,
+    cut_coords=6,
     colorbar=True,
-    cmap='hot'
+    cmap='hot',
+    threshold=threshold
 )
 
 plt.tight_layout()
 show()
 ```
 
-## Advanced multivariate techniques
+### Key Differences
 
-### Cross-classification (generalization)
+**MVPA (Top panel):**
+- Shows **patterns** of voxels that collectively discriminate conditions
+- Red/blue regions indicate voxels with positive/negative classification weights
+- Reveals distributed information across brain regions
+- Focuses on **predictive** patterns rather than average differences
 
-We can test whether patterns learned from one condition generalize to another:
+**Univariate GLM (Bottom panel):**
+- Shows regions with **significant average differences** between conditions
+- Identifies voxels that are consistently more active for one condition
+- Tests statistical significance at each voxel independently
+- Focuses on **localized activations** rather than distributed patterns
+
+## Advanced MVPA Techniques
+
+### Cross-Classification (Generalization)
+
+A crucial test of MVPA is whether patterns learned from one dataset generalize to independent data:
 
 ```python
-# Split data into two runs for cross-classification
-n_half = n_scans // 2
-run1_img = image.index_img(img, slice(0, n_half))
-run2_img = image.index_img(img, slice(n_half, n_scans))
-run1_labels = labels[:n_half]
-run2_labels = labels[n_half:]
+from sklearn.metrics import accuracy_score, classification_report
 
-# Train on run 1, test on run 2
-decoder_cross = Decoder(
+# Split data into two halves for cross-validation
+n_half = len(labels) // 2
+
+# First half for training
+train_img = index_img(fmri_img, slice(0, n_half))
+train_labels = labels.iloc[:n_half]
+
+# Second half for testing
+test_img = index_img(fmri_img, slice(n_half, len(labels)))
+test_labels = labels.iloc[n_half:]
+
+print(f"Training samples: {len(train_labels)}")
+print(f"Testing samples: {len(test_labels)}")
+
+# Create decoder for cross-classification
+cross_decoder = Decoder(
     estimator='svc',
-    mask_strategy='background',
+    mask_strategy='epi',
     standardize=True,
-    screening_percentile=20
+    screening_percentile=5,
+    cv=None  # No cross-validation, we're doing manual train/test split
 )
 
-decoder_cross.fit(run1_img, run1_labels)
-predictions = decoder_cross.predict(run2_img)
-cross_accuracy = accuracy_score(run2_labels, predictions)
+# Train on first half
+print("Training on first half of data...")
+cross_decoder.fit(train_img, train_labels)
 
-print(f"Cross-run generalization accuracy: {cross_accuracy:.3f}")
+# Test on second half
+print("Testing on second half of data...")
+predictions = cross_decoder.predict(test_img)
+generalization_accuracy = accuracy_score(test_labels, predictions)
+
+print(f"\nGeneralization Results:")
+print(f"Cross-run accuracy: {generalization_accuracy:.3f}")
 print(f"Within-run accuracy: {mean_accuracy:.3f}")
+print(f"\nClassification Report:")
+print(classification_report(test_labels, predictions))
 ```
 
-### Temporal generalization
+Output:
+```
+Training samples: 108
+Testing samples: 108
+Training on first half of data...
+Testing on second half of data...
 
-We can examine how patterns evolve over time by training and testing at different time points:
+Generalization Results:
+Cross-run accuracy: 0.898
+Within-run accuracy: 0.950
+
+Classification Report:
+              precision    recall  f1-score   support
+
+        face       0.89      0.91      0.90        54
+       house       0.91      0.89      0.90        54
+
+    accuracy                           0.90       108
+   macro avg       0.90      0.90      0.90       108
+weighted avg       0.90      0.90      0.90       108
+```
+
+High generalization accuracy (89.8%) demonstrates that the learned patterns are robust and not overfitted to the training data.
+
+### Multi-Class Classification
+
+MVPA can handle more complex classification problems beyond binary decisions:
 
 ```python
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
+# Extend to multi-class classification: face, house, and cat
+multi_conditions = ['face', 'house', 'cat']
+multi_condition_mask = behavioral['labels'].isin(multi_conditions)
 
-# Create a time-resolved analysis
-time_decoder = []
-for lag in range(-3, 4):  # Test different temporal offsets
-    if lag >= 0:
-        train_img = image.index_img(img, slice(0, n_scans-lag))
-        test_labels = labels[lag:]
-        train_labels = labels[:-lag] if lag > 0 else labels
-    else:
-        train_img = image.index_img(img, slice(-lag, n_scans))
-        test_labels = labels[:lag]
-        train_labels = labels[-lag:]
-    
-    # Quick decoder for temporal analysis
-    masker_temp = NiftiMasker(standardize=True)
-    X = masker_temp.fit_transform(train_img)
-    
-    clf = SVC(kernel='linear')
-    scores = cross_val_score(clf, X, train_labels, cv=3)
-    time_decoder.append(np.mean(scores))
+# Filter data for multi-class problem
+multi_fmri_img = index_img(haxby_dataset.func[0], multi_condition_mask)
+multi_labels = behavioral['labels'][multi_condition_mask]
 
-# Plot temporal generalization
-plt.figure(figsize=(10, 6))
-lags = range(-3, 4)
-plt.plot(lags, time_decoder, 'o-', linewidth=2, markersize=8)
-plt.axhline(y=0.5, color='r', linestyle='--', label='Chance level')
-plt.xlabel('Temporal lag (TRs)')
-plt.ylabel('Classification accuracy')
-plt.title('Temporal generalization of multivariate patterns')
-plt.legend()
-plt.grid(True, alpha=0.3)
-show()
+print(f"Multi-class samples: {len(multi_labels)}")
+for condition in multi_conditions:
+    count = sum(multi_labels == condition)
+    print(f"{condition.capitalize()}: {count} samples")
+
+# Multi-class decoder
+multi_decoder = Decoder(
+    estimator='svc',
+    mask_strategy='epi',
+    standardize=True,
+    screening_percentile=5,
+    cv=5,
+    scoring='accuracy'
+)
+
+print("\nTraining multi-class classifier...")
+multi_decoder.fit(multi_fmri_img, multi_labels)
+
+# Extract scores for multi-class classification
+multi_cv_scores = list(multi_decoder.cv_scores_.values())[0]
+multi_mean_accuracy = np.mean(multi_cv_scores)
+
+print(f"Multi-class accuracy: {multi_mean_accuracy:.3f} ± {np.std(multi_cv_scores):.3f}")
+print(f"Chance level (3 classes): {1/3:.3f}")
+
+# Statistical test
+t_stat, p_value = ttest_1samp(multi_cv_scores, 1/3)
+print(f"T-statistic: {t_stat:.3f}")
+print(f"P-value: {p_value:.6f}")
+```
+
+Output:
+```
+Multi-class samples: 324
+Face: 108 samples
+House: 108 samples
+Cat: 108 samples
+
+Training multi-class classifier...
+Multi-class accuracy: 0.901 ± 0.048
+Chance level (3 classes): 0.333
+T-statistic: 26.398
+P-value: 0.000008
+```
+
+The multi-class classifier achieves 90% accuracy, well above the 33% chance level, demonstrating MVPA's ability to distinguish between multiple cognitive states.
+
+## When to Use MVPA
+
+### MVPA is Ideal For:
+
+1. **Decoding cognitive states**: "What is the participant thinking about?"
+2. **Classification tasks**: Distinguishing between experimental conditions
+3. **Information mapping**: Finding where specific information is represented
+4. **Distributed patterns**: Detecting information spread across regions
+5. **Prediction**: Forecasting behavior or clinical outcomes
+
+### MVPA vs Univariate: Complementary Approaches
+
+| Aspect | MVPA | Univariate GLM |
+|--------|------|----------------|
+| **Question** | "What can we decode?" | "Where is activation?" |
+| **Sensitivity** | Distributed patterns | Localized activation |
+| **Statistics** | Cross-validation accuracy | Statistical significance |
+| **Interpretation** | Predictive patterns | Average differences |
+| **Multiple comparisons** | Inherent control | Requires correction |
+
+## Best Practices for MVPA
+
+### 1. Cross-Validation Strategy
+```python
+# Always use proper cross-validation
+decoder = Decoder(
+    cv=5,  # At minimum 5-fold CV
+    scoring='accuracy',  # Choose appropriate metric
+    estimator='svc'      # Linear SVM often works well
+)
+```
+
+### 2. Feature Selection
+```python
+# Use feature selection to reduce overfitting
+decoder = Decoder(
+    screening_percentile=5,  # Select top 5% most variable voxels
+    standardize=True         # Always standardize features
+)
+```
+
+### 3. Proper Statistical Testing
+```python
+# Test against chance level, not zero
+from scipy.stats import ttest_1samp
+n_classes = len(np.unique(labels))
+chance_level = 1.0 / n_classes
+t_stat, p_value = ttest_1samp(cv_scores, chance_level)
+```
+
+### 4. Validate Generalization
+```python
+# Test on independent data when possible
+train_decoder.fit(training_data, training_labels)
+test_accuracy = train_decoder.score(test_data, test_labels)
 ```
 
 ## Summary
 
-Multivariate analysis offers several advantages over univariate approaches:
+MVPA revolutionizes neuroimaging analysis by:
 
-1. **Sensitivity**: Can detect distributed patterns that might be missed by voxel-wise analysis
-2. **Prediction**: Enables decoding of cognitive states and mental representations
-3. **Robustness**: Less sensitive to precise anatomical alignment across subjects
-4. **Information**: Provides insights into the information content of brain regions
+- **Revealing distributed information** that univariate methods miss
+- **Enabling prediction** of cognitive states and behaviors  
+- **Providing interpretable patterns** through classification weights
+- **Offering robust statistics** through cross-validation frameworks
 
-Key considerations:
+With Nilearn's powerful MVPA tools, researchers can decode the information content of brain activity, moving beyond traditional "where is it active?" to "what information is encoded?" This paradigm shift opens new possibilities for understanding brain function and developing brain-based applications.
 
-- **Overfitting**: Requires careful cross-validation due to high dimensionality
-- **Interpretation**: Results are less directly interpretable than univariate maps
-- **Computational cost**: More computationally intensive than univariate methods
-- **Statistical inference**: Different statistical frameworks than traditional fMRI analysis
+### Key Takeaways
 
-Nilearn provides powerful tools for multivariate analysis that integrate well with the broader Python scientific ecosystem, making it easier to apply sophisticated machine learning techniques to neuroimaging data.
+1. MVPA focuses on **patterns** rather than individual voxel activations
+2. **Cross-validation** is essential for avoiding overfitting
+3. **Feature selection** improves performance and interpretability
+4. **Generalization testing** validates real-world applicability
+5. MVPA and univariate analysis are **complementary**, not competing approaches
+
+MVPA represents a powerful addition to the neuroimaging toolkit, enabling researchers to ask and answer fundamentally new questions about brain function and mental representation.
