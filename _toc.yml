@@ -29,4 +29,5 @@ parts:
       - file: analysis-data
       - file: analysis-univariate
       - file: analysis-multivariate
+      - file: analysis-decoding
     - file: code
