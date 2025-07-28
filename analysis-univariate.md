@@ -15,10 +15,10 @@ kernelspec:
 # Univariate analysis
 
 In the previous section, we studied the time series of the voxel $v=(32,32,32)$,
-shown in {numref}`voxel-timeseries`.
+shown in {numref}`voxel-timeseries2`.
 
 ```{figure} ./images/voxel-timeseries.png
-:name: voxel-timeseries
+:name: voxel-timeseries2
 :width: 70%
 
 The time series of the voxel at $(32, 32, 32)$.
@@ -38,13 +38,13 @@ We will start by considering a simple linear dummy variable regression model.
 
 Let $Y^v(t)$ be a random variable representing the BOLD signal intensity at voxel $v$
 and time point $t$.
-For example, we can see from {numref}`voxel-timeseries` that $y^v(0)=1259.0$ is
+For example, we can see from {numref}`voxel-timeseries2` that $y^v(0)=1259.0$ is
 a realization of this random variable.
 
 Let $x_{\text{listen}}(t) = 1$ if the participant was listening at time point $t$.
 Let $x_{\text{listen}}(t) = 0$ if the participant was at rest at $t$.
 From the {ref}`experimental design<id-auditory-events-tsv>`
-and {numref}`voxel-timeseries`, we know that:
+and {numref}`voxel-timeseries2`, we know that:
 
 $$
 \begin{align*}
@@ -97,9 +97,9 @@ $$
 $$
 
 In order to attempt to reject $H_0$,
-we must first fit the model to the time series data in {numref}`voxel-timeseries`.
+we must first fit the model to the time series data in {numref}`voxel-timeseries2`.
 
-To print the time series data shown in {numref}`voxel-timeseries`, run
+To print the time series data shown in {numref}`voxel-timeseries2`, run
 `python print_func_voxel.py 32 32 32` on the following script:
 
 ```python
