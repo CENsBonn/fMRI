@@ -6,7 +6,9 @@ Open a terminal or WSL and clone the repository:
 ```bash
 git clone https://github.com/CENsBonn/fMRI
 ```
-Alternatively:
+Alternatively, if you intend to contribute changes  to the repository, you need to
+[generate an SSH keypair](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key)
+and run:
 ```bash
 git clone git@github.com:CENsBonn/fMRI
 ```
@@ -51,3 +53,11 @@ Now, try editing a file, e.g. `intro.md`.
 Upon saving the file, the Jupyter
 Book should automatically rebuild and refresh in your browser
 after a couple of seconds.
+
+After editing the file, commit and push the changes:
+
+```bash
+git add .
+git commit -m "docs: Update intro.md"
+git push
+```
