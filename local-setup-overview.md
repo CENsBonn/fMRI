@@ -15,4 +15,4 @@ kernelspec:
 # Local setup
 
 In this guide, we will cover how to set up a local environment for processing
-fMRI data.
+fMRI data!
